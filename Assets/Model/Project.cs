@@ -9,7 +9,9 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient;
 
+//TODO: Constructors, all datetime CRUDs, test all CRUD 
 namespace Model
 {
 	public class Project
@@ -22,14 +24,15 @@ namespace Model
 		public int State { get; set; }
 		public decimal Stated_budget { get; set; } 
 		public decimal Real_budget { get; set; }
-
+		
 		public virtual ICollection<Human_resources> Human_resources {get; set;}
 		public virtual ICollection<Product> Product {get; set;}
 		public virtual ICollection<Project_stage> Project_stage {get; set;}
 		public virtual ICollection<Employee> Employees {get; set;}
-				
+		
 		public Project (Int64 id, DateTime planned_begin_date, DateTime planned_end_date,
-		                DateTime real_begin_date, DateTime real_end_date, int state, decimal stated_budget, decimal real_budget)
+		                DateTime real_begin_date, DateTime real_end_date, int state, 
+		                decimal stated_budget, decimal real_budget, MySqlConnection connection)
 		{		                
 			Planned_begin_date = planned_begin_date;
 			Planned_end_date = planned_end_date;
@@ -39,6 +42,23 @@ namespace Model
 			State = state;
 			Stated_budget = stated_budget;
 			Real_budget = real_budget;
+			
+			ProjectDAO.InsertProjects(connection, new List<Project>{this});
 		} //add to all models functions or a class?
+
+		public Project (DateTime planned_begin_date, DateTime planned_end_date,
+		                decimal stated_budget, MySqlConnection connection)
+			: this(0, planned_begin_date, planned_end_date, new DateTime(), new DateTime(), 0, 
+			       stated_budget, 0, connection)
+		{		                
+		}
+
+		public void Start(MySqlConnection connection)
+		{
+			this.State = 1;
+			List<Project> projects = new List<Project> ();
+			projects.Add (this);
+			ProjectDAO.UpdateProjects (connection, projects);
+		}
 	}
 }

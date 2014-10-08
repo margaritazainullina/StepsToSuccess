@@ -26,30 +26,30 @@ public class ProjectDAO {
 			int state = Convert.ToInt32(data["status"]);
 			decimal stated_budget = Convert.ToDecimal(data["stated_budget"]);
 			decimal real_budget = Convert.ToDecimal(data["real_budget"]);
-
+			
 			Project project = new Project(id, planned_begin_date, planned_end_date, real_begin_date, real_end_date, 
-			                              state, stated_budget, real_budget);
+			                              state, stated_budget, real_budget, _connection);
 			Debug.Log("Get character "+ id);
 			projects.Add(project);
 		}
 		_connection.Close ();
 		return projects;
 	}
-
+	
 	public static void InsertProjects (MySqlConnection _connection, List<Project> projects){		
 		foreach (Project project in projects) {
 			_connection.Open ();
-			string Query = "INSERT INTO `character` values(" + project.Id + ",'" + project.Planned_begin_date + "','" + 
-				 project.Planned_end_date + "','" + project.Real_begin_date + "','" + project.Real_end_date + "'," + 
+			string Query = "INSERT INTO `project` values(" + project.Id + ",'" + project.Planned_begin_date + "','" + 
+				project.Planned_end_date + "','" + project.Real_begin_date + "','" + project.Real_end_date + "'," + 
 					project.State + "," + project.Stated_budget + "," + project.Real_budget + ");";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceQueryVoidWithNulls(Query);
 			command.ExecuteReader ();
 			Debug.Log ("Insert project " + project.Id);
 			_connection.Close ();
 		}
 	}
-
+	
 	public static void UpdateProjects (MySqlConnection _connection, List<Project> projects){		
 		foreach (Project project in projects) {
 			_connection.Open ();
@@ -57,7 +57,7 @@ public class ProjectDAO {
 				"', real_begin_date='" + project.Real_begin_date + "', real_end_date='" + project.Real_end_date + 
 					"', state=" + project.State + ", stated_budget=" + project.Stated_budget + ", real_budget=" + project.Real_budget + " where id=" + project.Id + ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceQueryVoidWithNulls(Query);
 			command.ExecuteReader ();
 			Debug.Log ("Update project " + project.Id);
 			_connection.Close ();
@@ -69,11 +69,11 @@ public class ProjectDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `project` WHERE id="+project.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceQueryVoidWithNulls(Query);
 			command.ExecuteReader ();
 			Debug.Log ("Delete project " + project.Id);
 			_connection.Close ();
 		}
 	}
-
+	
 }

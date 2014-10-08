@@ -18,13 +18,17 @@ public class TestScript : MonoBehaviour {
 
 		MySqlConnection connection = new MySqlConnection(source);
 
-		AssetTest (connection);
+		Project project = new Project (2, new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), 0, 1000, 0, connection);
+		project.Start (connection);
+
+
+		/*AssetTest (connection);
 		CharacterTest (connection);
 		CompanyTest (connection);
 		CompetitorTest (connection);
 		DocumentTest (connection);
 		EmployeeTest (connection);
-		EnterpriseTest (connection);
+		EnterpriseTest (connection);*/
 		/*Enterprise_docsTest (connection);
 
 
