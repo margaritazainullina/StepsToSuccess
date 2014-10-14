@@ -41,7 +41,7 @@ public class Enterprise_equipmentDAO {
 		foreach (Enterprise_equipment enterprise_equip in enterprise_equipment) {
 			_connection.Open ();
 			string Query = "INSERT INTO `enterprise_equipment` values(" + enterprise_equip.Enterprise_id + "," + enterprise_equip.Equipment_id + ",'" + 
-				enterprise_equip.Purchase_date + "'," + enterprise_equip.Quantity + "," + enterprise_equip.Lease_term + "," + enterprise_equip.IsRunning + ");";
+				Helper.ToMySQLDateTimeFormat(enterprise_equip.Purchase_date) + "'," + enterprise_equip.Quantity + "," + enterprise_equip.Lease_term + "," + enterprise_equip.IsRunning + ");";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  Query = Helper.ReplaceQueryVoidWithNulls(Query);
 			command.ExecuteReader ();
@@ -53,7 +53,7 @@ public class Enterprise_equipmentDAO {
 	public static void UpdateEnterprise_equipment (MySqlConnection _connection, List<Enterprise_equipment> enterprise_equipment){		
 		foreach (Enterprise_equipment enterprise_equip in enterprise_equipment) {
 			_connection.Open ();
-			string Query = "UPDATE `enterprise_equipment` SET purchase_date='" + enterprise_equip.Purchase_date + "', quantity=" + enterprise_equip.Quantity + 
+			string Query = "UPDATE `enterprise_equipment` SET purchase_date='" + Helper.ToMySQLDateTimeFormat(enterprise_equip.Purchase_date) + "', quantity=" + enterprise_equip.Quantity + 
 				", lease_term=" + enterprise_equip.Lease_term + ", isRunning=" + enterprise_equip.IsRunning  + " where enterprise_id=" + enterprise_equip.Enterprise_id + " AND equipment_id=" + enterprise_equip.Equipment_id + ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  Query = Helper.ReplaceQueryVoidWithNulls(Query);

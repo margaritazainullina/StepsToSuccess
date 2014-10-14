@@ -34,7 +34,7 @@ public class RevenueDAO {
 	public static void InsertRevenues (MySqlConnection _connection, List<Revenue> revenues){		
 		foreach (Revenue revenue in revenues) {
 			_connection.Open ();
-			string Query = "INSERT INTO `revenue` values(" + revenue.Id + "," + revenue.Revenue_date + "," + 
+			string Query = "INSERT INTO `revenue` values(" + revenue.Id + "," + Helper.ToMySQLDateTimeFormat(revenue.Revenue_date) + "," + 
 				revenue.Value + "," + revenue.Enterprise_id + ");";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  Query = Helper.ReplaceQueryVoidWithNulls(Query);
@@ -46,7 +46,7 @@ public class RevenueDAO {
 	public static void UpdateRevenues (MySqlConnection _connection, List<Revenue> revenues){		
 		foreach (Revenue revenue in revenues) {
 			_connection.Open ();
-			string Query = "UPDATE `revenue` SET revenue_date=" + revenue.Revenue_date + ", value=" + revenue.Value + 
+			string Query = "UPDATE `revenue` SET revenue_date=" + Helper.ToMySQLDateTimeFormat(revenue.Revenue_date) + ", value=" + revenue.Value + 
 				", enterprise_id=" + revenue.Enterprise_id  + " where id=" + revenue.Id + ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  Query = Helper.ReplaceQueryVoidWithNulls(Query);

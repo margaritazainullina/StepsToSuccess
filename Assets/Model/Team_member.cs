@@ -13,14 +13,11 @@ namespace Model
 {
 	public class Team_member
 	{
-		public int Hours_in_month { get; set; }
-
-		public virtual Employee Employee_id { get; set; }
-		public virtual Project Project_id { get; set; }
+		public virtual Int64 Employee_id { get; set; }
+		public virtual Int64 Project_id { get; set; }
 		
-		public Team_member(Employee employee_id, Project project_id, int hours_in_month)
+		public Team_member(Int64 employee_id, Int64 project_id)
 		{
-			Hours_in_month = hours_in_month;
 			Employee_id = employee_id;
 			Project_id = project_id;
 		}

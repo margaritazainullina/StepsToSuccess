@@ -36,7 +36,7 @@ public class Salary_paymentDAO {
 	public static void InsertSalary_payments (MySqlConnection _connection, List<Salary_payment> salary_payments, Int64 enterprise_id){		
 		foreach (Salary_payment salary_payment in salary_payments) {
 			_connection.Open ();
-			string Query = "INSERT INTO `salary_payment` values(" + salary_payment.Id + ",'" + salary_payment.Date + "'," + salary_payment.Hours_worked + "," + 
+			string Query = "INSERT INTO `salary_payment` values(" + salary_payment.Id + ",'" + Helper.ToMySQLDateTimeFormat(salary_payment.Date) + "'," + salary_payment.Hours_worked + "," + 
 				salary_payment.Salary + "," + salary_payment.Employee_id + ");";
 			
 			
@@ -52,7 +52,7 @@ public class Salary_paymentDAO {
 	public static void UpdateAssets (MySqlConnection _connection, List<Salary_payment> salary_payments){		
 		foreach (Salary_payment salary_payment in salary_payments) {
 			_connection.Open ();
-			string Query = "UPDATE `salary_payment` SET date='" + salary_payment.Date + "', hours_worked=" + salary_payment.Hours_worked + 
+			string Query = "UPDATE `salary_payment` SET date='" + Helper.ToMySQLDateTimeFormat(salary_payment.Date) + "', hours_worked=" + salary_payment.Hours_worked + 
 				", salary=" + salary_payment.Salary + ", employee_id=" + salary_payment.Employee_id + " where id=" + salary_payment.Id + ";";
 			
 			

@@ -22,15 +22,12 @@ namespace Model
 		public virtual ICollection<Employee> Employees {get; set;}
 		public virtual ICollection<Human_resources> Human_resources {get; set;}
 
-		public Role(Int64 id, string title, decimal min_salary, decimal max_salary, 
-		            ICollection<Employee> employees, ICollection<Human_resources> human_resources)
+		public Role(Int64 id, string title, decimal min_salary, decimal max_salary)
 		{
 			Id = id;
 			Title = title;
 			Min_salary = min_salary;
 			Max_salary = max_salary;
-			Employees = employees;
-			Human_resources = human_resources;
 		}
 	}
 }

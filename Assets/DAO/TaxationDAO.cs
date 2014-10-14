@@ -31,7 +31,7 @@ public class TaxationDAO {
 			double income_duty = Convert.ToDouble(data["income_duty"]);
 
 			Taxation taxation = new Taxation(id, taxation_group, max_revenue, max_employee, 
-			                                 VAT, income_duty, enterprises);
+			                                 VAT, income_duty);
 			Debug.Log("Get taxation " + id);
 			taxations.Add(taxation);
 		}

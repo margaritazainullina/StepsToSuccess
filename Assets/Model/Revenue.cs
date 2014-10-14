@@ -19,8 +19,6 @@ namespace Model
 
 		public Int64 Enterprise_id { get; set; }
 
-		public virtual Enterprise Enterprise { get; set; }
-
 		public Revenue(Int64 id, DateTime revenue_date, decimal value, Int64 enterprise_id)
 		{
 			Id = id;

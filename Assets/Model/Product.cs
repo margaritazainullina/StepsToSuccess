@@ -31,5 +31,10 @@ namespace Model
 			Quality = quality;
 			Prime_cost = prime_cost;
 		}
+
+		public Product (Int64 id, string title, decimal prime_cost)
+			: this(id,title,0,0,prime_cost)
+		{
+		}
 	}
 }

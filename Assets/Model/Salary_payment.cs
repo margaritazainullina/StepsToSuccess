@@ -31,8 +31,6 @@ namespace Model
 
 		public Int64 Employee_id { get; set; }
 
-		public virtual Employee Employee { get; set; }
-		
 		public Salary_payment(Int64 id, DateTime date, int? hours_worked, double? salary,
 		                      Int64 employee_id)
 		{

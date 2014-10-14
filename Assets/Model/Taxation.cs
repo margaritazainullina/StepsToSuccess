@@ -25,7 +25,7 @@ namespace Model
 		public virtual ICollection<Enterprise> Enterprises {get; set;}
 
 		public Taxation(Int64 id, int taxation_group, decimal max_revenue, 
-		                int max_employee, double VAT, double income_duty, ICollection<Enterprise> enterprises)
+		                int max_employee, double VAT, double income_duty)
 		{
 			Id = id;
 			Taxation_group = taxation_group;
@@ -33,7 +33,6 @@ namespace Model
 			Max_employee = max_employee;
 			this.VAT = VAT;
 			Income_duty = income_duty;
-			Enterprises = enterprises;
 		}
 	}
 }

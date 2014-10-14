@@ -60,5 +60,21 @@ namespace Model
 			projects.Add (this);
 			ProjectDAO.UpdateProjects (connection, projects);
 		}
+
+		public void AppointEmployee(MySqlConnection connection, Int64 employee_id, Int64 project_id)
+		{
+			Team_memberDAO.InsertTeam_members(connection, new List<Team_member> () { new Team_member(employee_id, project_id)});
+		}
+
+		public void FireEmployee(MySqlConnection connection, Int64 employee_id, Int64 project_id)
+		{
+			Team_memberDAO.DeleteTeam_members(connection, new List<Team_member> () { new Team_member(employee_id, project_id)});
+		}
+		/*
+		public void Cancel(MySqlConnection connection, Int64 project_id)
+		{
+
+		}*/
+
 	}
 }

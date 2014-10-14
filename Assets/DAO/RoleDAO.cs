@@ -28,7 +28,7 @@ public class RoleDAO {
 			decimal min_salary = Convert.ToDecimal(data["min_salary"]);
 			decimal max_salary = Convert.ToDecimal(data["max_salary"]);
 
-			Role role = new Role(id, title, min_salary, max_salary, employees, human_resources);
+			Role role = new Role(id, title, min_salary, max_salary);
 			Debug.Log("Get role " + title);
 			roles.Add(role);
 		}

@@ -23,9 +23,6 @@ namespace Model
 		public Int64 Asset_id { get; set; }
 		public Int64 Company_id { get; set; }
 
-		public virtual Asset Asset { get; set; }
-		public virtual Company Company { get; set; }
-
 		public Service(Int64 id, string title, decimal price, int period, 
 		               decimal effectiveness, Int64 asset_id, Int64 company_id)
 		{

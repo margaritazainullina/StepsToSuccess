@@ -45,5 +45,12 @@ namespace Model
 			Design_done = design_done;
 			Project_id = project_id;
 		}
+
+		public Project_stage(Int64 id, int? conception_hours, int? programming_hours, int? testing_hours, 
+		                     int? design_hours, Int64 project_id)
+			:this(id,conception_hours,programming_hours,testing_hours,design_hours,null,null,null,null,project_id)
+		{
+
+		}
 	}
 }

@@ -37,7 +37,7 @@ public class Enterprise_docsDAO {
 		foreach (Enterprise_docs enterprise_doc in enterprise_docs) {
 			_connection.Open ();
 			string Query = "INSERT INTO `enterprise_docs` values(" + enterprise_doc.Document_id + "," + enterprise_doc.Availability + 
-				"," + enterprise_doc.Is_active + ",'" + enterprise_doc.Expiration_date + "'," + enterprise_doc.Enterprise_id + ");";
+				"," + enterprise_doc.Is_active + ",'" + Helper.ToMySQLDateTimeFormat(enterprise_doc.Expiration_date) + "'," + enterprise_doc.Enterprise_id + ");";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  Query = Helper.ReplaceQueryVoidWithNulls(Query);
 			command.ExecuteReader ();
@@ -50,7 +50,7 @@ public class Enterprise_docsDAO {
 		foreach (Enterprise_docs enterprise_doc in enterprise_docs) {
 			_connection.Open ();
 			string Query = "UPDATE `enterprise_docs` SET availability=" + enterprise_doc.Availability + ", is_active=" + 
-				enterprise_doc.Is_active + ", expiration_date='" + enterprise_doc.Expiration_date + "', enterprise_id=" + 
+				enterprise_doc.Is_active + ", expiration_date='" + Helper.ToMySQLDateTimeFormat(enterprise_doc.Expiration_date) + "', enterprise_id=" + 
 					enterprise_doc.Enterprise_id + " where id=" + enterprise_doc.Document_id + ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  Query = Helper.ReplaceQueryVoidWithNulls(Query);
