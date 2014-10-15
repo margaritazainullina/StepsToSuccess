@@ -33,7 +33,7 @@ public class Salary_paymentDAO {
 		return salary_payments;
 	}
 
-	public static void InsertSalary_payments (MySqlConnection _connection, List<Salary_payment> salary_payments, Int64 enterprise_id){		
+	public static void InsertSalary_payments (MySqlConnection _connection, List<Salary_payment> salary_payments){		
 		foreach (Salary_payment salary_payment in salary_payments) {
 			_connection.Open ();
 			string Query = "INSERT INTO `salary_payment` values(" + salary_payment.Id + ",'" + Helper.ToMySQLDateTimeFormat(salary_payment.Date) + "'," + salary_payment.Hours_worked + "," + 

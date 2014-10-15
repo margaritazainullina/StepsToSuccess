@@ -24,8 +24,9 @@ public class ProductDAO {
 			decimal price = Convert.ToDecimal(data["price"]);
 			double quality = Convert.ToDouble(data["quality"]);
 			decimal prime_cost = Convert.ToDecimal(data["prime_cost"]);
+			Int64 project_id = Convert.ToInt64(data["project_id"]);
 
-			Product product = new Product(id, title, price, quality, prime_cost);
+			Product product = new Product(id, title, price, quality, prime_cost, project_id);
 			Debug.Log("Get product "+title);
 			products.Add(product);
 		}
