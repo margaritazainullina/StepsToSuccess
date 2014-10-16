@@ -18,7 +18,7 @@ public class TestScript : MonoBehaviour {
 
 		MySqlConnection connection = new MySqlConnection(source);
 
-		Project project = new Project (2, new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), 0, 1000, 0, connection);
+	/*	Project project = new Project (3, new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), 0, 1000, 0, connection);
 		project.Start (connection);
 
 
@@ -45,6 +45,10 @@ public class TestScript : MonoBehaviour {
 		ServiceTest (connection);		
 		TaxationTest (connection);
 		Team_memberTest (connection);*/
+
+		Enterprise e = new Enterprise(4, "MyEnterprise", 500.23M, 2.5, 4, 1);		
+		EnterpriseDAO.InsertEnterprises (connection, new List<Enterprise>(){ e});
+		e.CompleteDocuments (connection);
 	}
 
 	void AssetTest(MySqlConnection connection)

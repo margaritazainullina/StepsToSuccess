@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient;
 
 namespace Model
 {
@@ -41,6 +42,15 @@ namespace Model
 			Stationary = stationary;
 			Type = type;
 			Taxation_id = taxation_id;
+		}
+		public void CompleteDocuments(MySqlConnection connection)
+		{
+			//if legal body - complete form #1, if private - form #10
+			String form = "";
+			if (Type==1) form = System.IO.File.ReadAllText(@"..\Docs\registration_form_1.txt");
+			else form = System.IO.File.ReadAllText(@"..\Docs\registration_form_10.txt");
+
+			//Team_memberDAO.InsertTeam_members(connection, new List<Team_member> () { new Team_member(employee_id, project_id)});
 		}
 	}
 }
