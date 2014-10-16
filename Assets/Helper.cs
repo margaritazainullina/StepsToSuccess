@@ -30,7 +30,7 @@ namespace AssemblyCSharp
 			return formattedDate;
 		}
 
-		public static string ReplaceQueryVoidWithNulls(string expression)
+		public static string ReplaceInsertQueryVoidWithNulls(string expression)
 		{
 			expression = Regex.Replace (expression, @"(\()\s*(,\s*)", @"(null,");
 			expression = Regex.Replace (expression, @"\s*(,\s*)(\))", @",null)");
@@ -38,6 +38,12 @@ namespace AssemblyCSharp
 			return expression;
 		}
 
+		public static string ReplaceUpdateQueryVoidWithNulls(string expression)
+		{
+			expression = Regex.Replace (expression, @"(\w*)=,", @"\1=null,");
+			expression = Regex.Replace (expression, @"(\w*)=", @"\1=null");
+			return expression;
+		}
 	}
 }
 

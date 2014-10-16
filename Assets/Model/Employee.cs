@@ -16,7 +16,7 @@ namespace Model
 	{
 		public Int64 Id { get; set; }
 		public string Title { get; set; }
-		public int Qualification { get; set; }
+		public double Qualification { get; set; }
 		public decimal Salary { get; set; }
 
 		public Int64 Role_id { get; set; }
@@ -28,7 +28,7 @@ namespace Model
 		public virtual ICollection<Salary_payment> Salary_payments {get; set;}
 		public virtual ICollection<Project> Projects {get; set;}
 
-		public Employee (Int64 id, string title, int qualification, decimal salary, 
+		public Employee (Int64 id, string title, double qualification, decimal salary, 
 		                 Int64 role_id, Int64 enterprise_id)
 		{
 			Id = id;

@@ -40,10 +40,10 @@ public class Salary_paymentDAO {
 				salary_payment.Salary + "," + salary_payment.Employee_id + ");";
 			
 			
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Insert salary_payment id="+salary_payment.Id);
 			_connection.Close ();
@@ -56,10 +56,10 @@ public class Salary_paymentDAO {
 				", salary=" + salary_payment.Salary + ", employee_id=" + salary_payment.Employee_id + " where id=" + salary_payment.Id + ";";
 			
 			
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Update salary_payment id="+salary_payment.Id);
 			_connection.Close ();
@@ -71,7 +71,7 @@ public class Salary_paymentDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `salary_payment` WHERE id="+salary_payment.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Delete salary_payment id="+salary_payment.Id);
 			_connection.Close ();

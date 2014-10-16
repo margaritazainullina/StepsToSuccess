@@ -16,14 +16,9 @@ public class Project_stageDAO {
 		MySqlDataReader data = command.ExecuteReader();
 		
 		List<Project_stage> project_stages = new List<Project_stage>();
-		
-		List<Purchase> purchases = PurchaseDAO.GetPurchases (_connection);
-		List<Service> services = ServiceDAO.GetServices (_connection);
-		
+
 		//read data from dataReader and form list of Character instances
 		while (data.Read()){
-			Int64 id = Convert.ToInt64(data["id"]);
-
 			int? conception_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["conception_hours"]));
 		    int? programming_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["programming_hours"]));
 		    int? testing_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["testing_hours"]));
@@ -36,9 +31,9 @@ public class Project_stageDAO {
 
 			Int64 project_id = Convert.ToInt64(data["project_id"]);
 
-			Project_stage project_stage = new Project_stage(id, conception_hours, programming_hours, testing_hours, design_hours,
-			                                                conception_done, programming_done, testing_done, design_done, project_id);
-			Debug.Log("Get asset type="+id);
+			Project_stage project_stage = new Project_stage(project_id, conception_hours, programming_hours, testing_hours, design_hours,
+			                                                conception_done, programming_done, testing_done, design_done);
+			Debug.Log("Get asset type="+project_id);
 			project_stages.Add(project_stage);
 		}
 		_connection.Close ();
@@ -48,13 +43,15 @@ public class Project_stageDAO {
 	public static void InsertProject_stages (MySqlConnection _connection, List<Project_stage> project_stages, Int64 enterprise_id){		
 		foreach (Project_stage project_stage in project_stages) {
 			_connection.Open ();
-			string Query = "INSERT INTO `project_stage` values(" + project_stage.Id + "," + project_stage.Conception_hours + "," + project_stage.Programming_hours+ "," + 
+			string Query = "INSERT INTO `project_stage` values(" + project_stage.Project_id + "," + project_stage.Conception_hours + "," + project_stage.Programming_hours+ "," + 
 				project_stage.Testing_hours+ "," + project_stage.Design_hours+ "," + project_stage.Conception_done+ "," + project_stage.Programming_done+ "," 
-					+ project_stage.Testing_done+ "," + project_stage.Design_done+ "," + project_stage.Project_id + ");";
+					+ project_stage.Testing_done+ "," + project_stage.Design_done+ ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
-			Debug.Log ("Insert project_stage type="+project_stage.Id+" and value="+project_stage.Project_id);
+			Debug.Log ("Insert project_stage type="+project_stage.Project_id+" and value="+project_stage.Project_id);
 			_connection.Close ();
 		}
 	}
@@ -62,13 +59,14 @@ public class Project_stageDAO {
 	public static void UpdateProject_stages (MySqlConnection _connection, List<Project_stage> project_stages){		
 		foreach (Project_stage project_stage in project_stages) {
 			_connection.Open ();
-			string Query = "UPDATE `project_stage` SET conception_hours='" + project_stage.Conception_hours + ", programming_hours=" + project_stage.Programming_hours+ ", testing_hours=" + 
+			string Query = "UPDATE `project_stage` SET conception_hours=" + project_stage.Conception_hours + ", programming_hours=" + project_stage.Programming_hours+ ", testing_hours=" + 
 				project_stage.Testing_hours+ ", design_hours=" + project_stage.Design_hours+ ", conception_done=" + project_stage.Conception_done+ ", programming_done=" + project_stage.Programming_done+ ", testing_done=" 
-					+ project_stage.Testing_done+ ", design_done=" + project_stage.Design_done+ ", project_id=" + project_stage.Project_id + " where id=" + project_stage.Id + ";";
+					+ project_stage.Testing_done+ ", design_done=" + project_stage.Design_done + " where project_id=" + project_stage.Project_id + ";";
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
-			Debug.Log ("Update project_stage type="+project_stage.Id+" and value="+project_stage.Project_id);
+			Debug.Log ("Update project_stage type="+project_stage.Project_id+" and value="+project_stage.Project_id);
 			_connection.Close ();
 		}
 	}
@@ -76,11 +74,12 @@ public class Project_stageDAO {
 	public static void DeleteProject_stages (MySqlConnection _connection, List<Project_stage> project_stages){		
 		foreach (Project_stage project_stage in project_stages) {
 			_connection.Open ();
-			string Query = "DELETE FROM `project_stage` WHERE id="+project_stage.Id+ ";";
+			string Query = "DELETE FROM `project_stage` WHERE project_id="+project_stage.Project_id+ ";";
+
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
-			Debug.Log ("Delete project_stage type="+project_stage.Id+" and value="+project_stage.Project_id);
+			Debug.Log ("Delete project_stage type="+project_stage.Project_id+" and value="+project_stage.Project_id);
 			_connection.Close ();
 		}
 	}

@@ -23,7 +23,7 @@ public class ProjectDAO {
 			DateTime planned_end_date = Convert.ToDateTime(data["planned_end_date"]);
 			DateTime real_begin_date = Convert.ToDateTime(data["real_begin_date"]);
 			DateTime real_end_date = Convert.ToDateTime(data["real_end_date"]);
-			int state = Convert.ToInt32(data["status"]);
+			int state = Convert.ToInt32(data["state"]);
 			decimal stated_budget = Convert.ToDecimal(data["stated_budget"]);
 			decimal real_budget = Convert.ToDecimal(data["real_budget"]);
 			
@@ -42,8 +42,9 @@ public class ProjectDAO {
 			string Query = "INSERT INTO `project` values(" + project.Id + ",'" + Helper.ToMySQLDateTimeFormat(project.Planned_begin_date) + "','" + 
 				Helper.ToMySQLDateTimeFormat(project.Planned_end_date) + "','" + Helper.ToMySQLDateTimeFormat(project.Real_begin_date) + "','" + Helper.ToMySQLDateTimeFormat(project.Real_end_date) + "'," + 
 					project.State + "," + project.Stated_budget + "," + project.Real_budget + ");";
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Insert project " + project.Id);
 			_connection.Close ();
@@ -56,8 +57,9 @@ public class ProjectDAO {
 			string Query = "UPDATE `project` SET planned_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Planned_begin_date) + "', planned_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Planned_end_date) + 
 				"', real_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Real_begin_date) + "', real_end_date='" + Helper.ToMySQLDateTimeFormat(project.Real_end_date) + 
 					"', state=" + project.State + ", stated_budget=" + project.Stated_budget + ", real_budget=" + project.Real_budget + " where id=" + project.Id + ";";
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Update project " + project.Id);
 			_connection.Close ();
@@ -69,24 +71,83 @@ public class ProjectDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `project` WHERE id="+project.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete project " + project.Id);
 			_connection.Close ();
 		}
 	}
 
-	public static void UpdateProgress(MySqlConnection _connection, Project project, DateTime date) 
+	public static void UpdateProgress(MySqlConnection _connection, Project project, DateTime salary_payment_date) 
 	{
-		string Query = "SELECT Salary_payment.hours_worked, Role.title, Employee.Qualification " +
+		string Query = "SELECT Employee.id, count(Salary_payment.hours_worked) as hours_worked, Role.title, Employee.Qualification " +
 						"FROM Project, Team_member, Employee, Salary_payment, Role " + 
 						"WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id " +
-						"AND Employee.Id=Salary_payment.Employee_id AND Employee.Role_id=Role.Id AND Salary_payment.date='" 
-						+ Helper.ToMySQLDateTimeFormat (date) + "';";
+						"AND Employee.Id=Salary_payment.Employee_id AND Employee.Role_id=Role.Id AND Project.Id=" + project.Id + " AND Salary_payment.date='" 
+				+ Helper.ToMySQLDateTimeFormat (salary_payment_date) + "' group by Employee.id;";
+		_connection.Open ();
+
 		MySqlCommand command = new MySqlCommand (Query, _connection);
-		command.ExecuteReader ();
+
+		double conception_hours = 0;
+		double programming_hours = 0;
+		double testing_hours = 0;
+		double design_hours = 0;
+
+		MySqlDataReader data = command.ExecuteReader();
+
+		while (data.Read()) {
+						int hours_worked = Convert.ToInt32 (data ["hours_worked"]);
+						string title = Convert.ToString (data ["title"]);
+						double qualification = Convert.ToInt32 (data ["qualification"]);
+						switch (title) {
+						case "Analyst":
+								{
+										conception_hours += (int)hours_worked * qualification;
+										break;
+								}
+						case "Programmer":
+								{
+										programming_hours += (int)hours_worked * qualification;
+										break;
+								}
+						case "Tester":
+								{
+										testing_hours += (int)hours_worked * qualification;
+										break;
+								}
+						case "Designer":
+								{
+										design_hours += (int)hours_worked * qualification;
+										break;
+								}
+						}
+				}
+		_connection.Close();
+
+			List<Project_stage> project_stages = Project_stageDAO.GetProject_stages(_connection);
+			foreach (Project_stage project_stage in project_stages) {
+				if(project_stage.Project_id != project.Id)
+				{
+					project_stages.Remove(project_stage);
+				}
+			}
+
+			project_stages[0].Conception_done = conception_hours;
+			project_stages[0].Programming_done = programming_hours;
+			project_stages[0].Testing_done = testing_hours;
+			project_stages[0].Design_done = design_hours;
+
+			Project_stageDAO.UpdateProject_stages(_connection, project_stages);
+
+			Debug.Log("Get character "+ conception_hours + "!!!"+ programming_hours + "!!!"+ 
+			          testing_hours + "!!!"+ design_hours + "!!!");
+			//projects.Add(project);
+
+
+
 		Debug.Log ("Progress updated " + project.Id);
-		_connection.Close ();
+		
 	}
 	
 }

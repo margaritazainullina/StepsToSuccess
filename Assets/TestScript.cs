@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using MySql.Data.MySqlClient;
 using System;
@@ -18,8 +18,8 @@ public class TestScript : MonoBehaviour {
 
 		MySqlConnection connection = new MySqlConnection(source);
 
-		Project project = new Project (2, new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), 0, 1000, 0, connection);
-		project.Start (connection);
+		Project project = ProjectDAO.GetProjects(connection)[0];
+		project.MakeProgress(connection, new DateTime(2014,05,15));
 
 
 		/*AssetTest (connection);

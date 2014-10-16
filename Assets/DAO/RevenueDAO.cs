@@ -36,8 +36,9 @@ public class RevenueDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `revenue` values(" + revenue.Id + "," + Helper.ToMySQLDateTimeFormat(revenue.Revenue_date) + "," + 
 				revenue.Value + "," + revenue.Enterprise_id + ");";
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Insert revenue " + revenue.Id);
 			_connection.Close ();
@@ -48,8 +49,9 @@ public class RevenueDAO {
 			_connection.Open ();
 			string Query = "UPDATE `revenue` SET revenue_date=" + Helper.ToMySQLDateTimeFormat(revenue.Revenue_date) + ", value=" + revenue.Value + 
 				", enterprise_id=" + revenue.Enterprise_id  + " where id=" + revenue.Id + ";";
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Update revenue " + revenue.Id);
 			_connection.Close ();
@@ -61,7 +63,7 @@ public class RevenueDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `revenue` WHERE id="+revenue.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete revenue " + revenue.Id);
 			_connection.Close ();

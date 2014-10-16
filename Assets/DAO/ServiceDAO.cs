@@ -69,10 +69,10 @@ public class ServiceDAO {
 				service.Price + "," + service.Period + "," + service.Effectiveness + "," + service.Asset_id + "," + service.Company_id + ");";
 			
 			
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Insert service " + service.Title);
 			_connection.Close ();
@@ -86,10 +86,10 @@ public class ServiceDAO {
 					service.Asset_id + ", company_id=" + service.Company_id  + " where id=" + service.Id + ";";
 			
 			
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Update service " + service.Title);
 			_connection.Close ();
@@ -101,7 +101,7 @@ public class ServiceDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `character` WHERE id="+service.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete service " + service.Title);
 			_connection.Close ();

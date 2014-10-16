@@ -40,8 +40,10 @@ public class CompanyDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `company` values(" + company.Id + ",'" + 
 				company.Title + "'," + company.Share + "," + company.Period + "," + company.Investment + ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Insert company " + company.Title);
 			_connection.Close ();
@@ -53,8 +55,10 @@ public class CompanyDAO {
 			_connection.Open ();
 			string Query = "UPDATE `company` SET title='" + company.Title + "', share=" + 
 				company.Share + ", period="  +  company.Period + ", investment=" + company.Investment + " where id=" + company.Id + ";";
+
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Update company " + company.Title);
 			_connection.Close ();
@@ -66,7 +70,7 @@ public class CompanyDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `company` WHERE id="+company.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete company " + company.Title);
 			_connection.Close ();

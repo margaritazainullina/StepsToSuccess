@@ -43,7 +43,7 @@ namespace Model
 			Stated_budget = stated_budget;
 			Real_budget = real_budget;
 			
-			ProjectDAO.InsertProjects(connection, new List<Project>{this});
+			//ProjectDAO.InsertProjects(connection, new List<Project>{this});
 		} //add to all models functions or a class?
 
 		public Project (DateTime planned_begin_date, DateTime planned_end_date,
@@ -89,9 +89,10 @@ namespace Model
 			ProjectDAO.UpdateProjects (connection, projects);
 		}
 
-		public void MakeProgress(MySqlConnection connection, DateTime date)
+		public void MakeProgress(MySqlConnection connection, DateTime salary_payment_date)
 		{
-			ProjectDAO.UpdateProgress(connection, this, date);
+			ProjectDAO.UpdateProgress(connection, this, salary_payment_date);
+
 		}
 
 		public void Complete(MySqlConnection connection, string product_title)
@@ -120,15 +121,22 @@ namespace Model
 						team_members.Remove(team_member);
 					}
 				}
-				//get employee by id
-				/*List<Employee> employees = EmployeeDAO.GetEmployees (connection);
+
+
+
+
+				/*
+				List<Employee> employees = new List<Employee>();
 				foreach (Employee employee in employees) 
 				{
-					if(team_member.Project_id != this.Id)
+					if(team_members[0].Project_id != this.Id)
 					{
-						employees.Remove(employee);
+						employees.Add(EmployeeDAO.GetEmployeeById(connection, this.Id));
+						employees[employees.Count-1].Qualification += 
 					}
 				}*/
+
+				//EmployeeDAO.UpdateEmployees(connection, employees);
 			}
 
 
@@ -140,9 +148,10 @@ namespace Model
 					team_members.Remove(team_member);
 				}
 			}
+
 			Team_memberDAO.DeleteTeam_members (connection, team_members);
 
-
+			//todo for every employee qualif
 
 		}
 
