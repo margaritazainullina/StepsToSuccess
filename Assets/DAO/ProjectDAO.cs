@@ -149,7 +149,7 @@ public class ProjectDAO {
 			Debug.Log ("Progress updated " + project.Id);		
 	}
 	//						employees[employees.Count-1].Qualification += 
-	public static void DeleteCharacters (MySqlConnection _connection, List<Project> projects){		
+	/*public static void DeleteCharacters (MySqlConnection _connection, List<Project> projects){		
 		foreach (Project project in projects) {
 			_connection.Open ();
 			string Query = "DELETE FROM `project` WHERE id="+project.Id+ ";";
@@ -159,7 +159,7 @@ public class ProjectDAO {
 			Debug.Log ("Delete project " + project.Id);
 			_connection.Close ();
 		}
-	} 
+	} */
 	/*
 SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Employee.Qualification
 FROM Project, Team_member, Employee, Salary_payment
