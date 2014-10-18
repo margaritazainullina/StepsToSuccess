@@ -20,21 +20,21 @@ namespace Model
 		public decimal Prime_cost { get; set; } 
 
 		public Int64 Project_id { get; set; }
-		public Project Project { get; set; }
 
 		public Product (Int64 id, string title, decimal price, double quality,
-		                decimal prime_cost)
+		                decimal prime_cost, Int64 project_id)
 		{
 			Id = id;
 			Title = title;
 			Price = price;
 			Quality = quality;
 			Prime_cost = prime_cost;
+			Project_id = project_id;
 		}
-
+/*
 		public Product (Int64 id, string title, decimal prime_cost)
 			: this(id,title,0,0,prime_cost)
 		{
-		}
+		}*/
 	}
 }

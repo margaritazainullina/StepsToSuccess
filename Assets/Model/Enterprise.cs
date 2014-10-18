@@ -43,14 +43,27 @@ namespace Model
 			Type = type;
 			Taxation_id = taxation_id;
 		}
+
 		public void CompleteDocuments(MySqlConnection connection)
 		{
 			//if legal body - complete form #1, if private - form #10
 			String form = "";
-			if (Type==1) form = System.IO.File.ReadAllText(@"..\Docs\registration_form_1.txt");
-			else form = System.IO.File.ReadAllText(@"..\Docs\registration_form_10.txt");
-
+		if (Type==1) form = System.IO.File.ReadAllText(@"Documents\registration_form_1.txt");
+			else form = System.IO.File.ReadAllText(@"Documents\registration_form_10.txt");
+			form += "";
 			//Team_memberDAO.InsertTeam_members(connection, new List<Team_member> () { new Team_member(employee_id, project_id)});
 		}
+
+		public void PaySalary(MySqlConnection connection, Employee employee, int hours_worked)
+		{
+			 //receive list or each time call fx
+			//id?
+			Salary_payment salary_payment = new Salary_payment (1, DateTime.Now, hours_worked, 
+			                                                   hours_worked * employee.Qualification, employee.Id);
+			Salary_paymentDAO.InsertSalary_payments (connection, new List<Salary_payment> () { salary_payment });
+		}
+
+
+
 	}
 }

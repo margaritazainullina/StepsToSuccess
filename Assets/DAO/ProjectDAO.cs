@@ -75,5 +75,18 @@ public class ProjectDAO {
 			_connection.Close ();
 		}
 	}
+
+	public static void UpdateProgress(MySqlConnection _connection, Project project, DateTime date) 
+	{
+		string Query = "SELECT Salary_payment.hours_worked, Role.title, Employee.Qualification " +
+						"FROM Project, Team_member, Employee, Salary_payment, Role " + 
+						"WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id " +
+						"AND Employee.Id=Salary_payment.Employee_id AND Employee.Role_id=Role.Id AND Salary_payment.date='" 
+						+ Helper.ToMySQLDateTimeFormat (date) + "';";
+		MySqlCommand command = new MySqlCommand (Query, _connection);
+		command.ExecuteReader ();
+		Debug.Log ("Progress updated " + project.Id);
+		_connection.Close ();
+	}
 	
 }

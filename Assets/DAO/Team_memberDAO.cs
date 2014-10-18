@@ -9,7 +9,7 @@ using AssemblyCSharp;
 public class Team_memberDAO {
 	
 	//returns list with all characters from db
-	public static List<Team_member> GetAssets (MySqlConnection _connection){		
+	public static List<Team_member> GetTeam_members (MySqlConnection _connection){		
 		
 		List<Team_member> team_members = new List<Team_member>();	
 		_connection.Open ();

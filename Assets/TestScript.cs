@@ -46,7 +46,7 @@ public class TestScript : MonoBehaviour {
 		TaxationTest (connection);
 		Team_memberTest (connection);*/
 
-		Enterprise e = new Enterprise(4, "MyEnterprise", 500.23M, 2.5, 4, 1);		
+		Enterprise e = new Enterprise(6, "MyEnterprise", 500.23M, 2.5, 0, 1);		
 		EnterpriseDAO.InsertEnterprises (connection, new List<Enterprise>(){ e});
 		e.CompleteDocuments (connection);
 	}

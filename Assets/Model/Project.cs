@@ -70,11 +70,82 @@ namespace Model
 		{
 			Team_memberDAO.DeleteTeam_members(connection, new List<Team_member> () { new Team_member(employee_id, project_id)});
 		}
-		/*
-		public void Cancel(MySqlConnection connection, Int64 project_id)
-		{
 
-		}*/
+		public void Cancel(MySqlConnection connection)
+		{
+			List<Team_member> team_members = Team_memberDAO.GetTeam_members (connection);
+			foreach (Team_member team_member in team_members) 
+			{
+				if(team_member.Project_id != this.Id)
+				{
+					team_members.Remove(team_member);
+				}
+			}
+			Team_memberDAO.DeleteTeam_members (connection, team_members);
+
+			this.State = 3;
+			List<Project> projects = new List<Project> ();
+			projects.Add (this);
+			ProjectDAO.UpdateProjects (connection, projects);
+		}
+
+		public void MakeProgress(MySqlConnection connection, DateTime date)
+		{
+			ProjectDAO.UpdateProgress(connection, this, date);
+		}
+
+		public void Complete(MySqlConnection connection, string product_title)
+		{
+			//id
+			decimal prime_cost = this.Stated_budget - this.Real_budget;
+			double quality = 1 + Convert.ToDouble(prime_cost) / Convert.ToDouble(this.Stated_budget) + 1 + 
+				(this.Real_end_date - this.Planned_end_date).TotalDays/(this.Planned_end_date-this.Planned_begin_date).TotalDays;
+
+			Product product = new Product (1, product_title, prime_cost,
+			                              quality, prime_cost, this.Id);
+			//like in ended
+
+			this.State = 2;
+			List<Project> projects = new List<Project> ();
+			projects.Add (this);
+			ProjectDAO.UpdateProjects (connection, projects);
+			List<Team_member> team_members;
+			if (quality > 1) 
+			{
+				team_members = Team_memberDAO.GetTeam_members (connection);
+				foreach (Team_member team_member in team_members) 
+				{
+					if(team_member.Project_id != this.Id)
+					{
+						team_members.Remove(team_member);
+					}
+				}
+				//get employee by id
+				/*List<Employee> employees = EmployeeDAO.GetEmployees (connection);
+				foreach (Employee employee in employees) 
+				{
+					if(team_member.Project_id != this.Id)
+					{
+						employees.Remove(employee);
+					}
+				}*/
+			}
+
+
+			team_members = Team_memberDAO.GetTeam_members (connection);
+			foreach (Team_member team_member in team_members) 
+			{
+				if(team_member.Project_id != this.Id)
+				{
+					team_members.Remove(team_member);
+				}
+			}
+			Team_memberDAO.DeleteTeam_members (connection, team_members);
+
+
+
+		}
+
 
 	}
 }
