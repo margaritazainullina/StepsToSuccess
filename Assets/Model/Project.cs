@@ -102,14 +102,15 @@ namespace Model
 			double quality = 1 + Convert.ToDouble(prime_cost) / Convert.ToDouble(this.Stated_budget) + 1 + 
 				(this.Real_end_date - this.Planned_end_date).TotalDays/(this.Planned_end_date-this.Planned_begin_date).TotalDays;
 
-			Product product = new Product (1, product_title, prime_cost,
+			Product product = new Product (0, product_title, prime_cost,
 			                              quality, prime_cost, this.Id);
-			//like in ended
+			ProductDAO.InsertProducts (connection, new List<Product> () { product });
 
 			this.State = 2;
 			List<Project> projects = new List<Project> ();
 			projects.Add (this);
 			ProjectDAO.UpdateProjects (connection, projects);
+
 			List<Team_member> team_members;
 			if (quality > 1) 
 			{
@@ -122,24 +123,22 @@ namespace Model
 					}
 				}
 
-
-
-
-				/*
 				List<Employee> employees = new List<Employee>();
-				foreach (Employee employee in employees) 
+				foreach (Team_member team_member in team_members) 
 				{
 					if(team_members[0].Project_id != this.Id)
 					{
 						employees.Add(EmployeeDAO.GetEmployeeById(connection, this.Id));
-						employees[employees.Count-1].Qualification += 
 					}
-				}*/
+				}
 
-				//EmployeeDAO.UpdateEmployees(connection, employees);
+				EmployeeDAO.UpdateEmployees(connection, employees);
 			}
 
 
+
+
+			//delete team members
 			team_members = Team_memberDAO.GetTeam_members (connection);
 			foreach (Team_member team_member in team_members) 
 			{
@@ -151,7 +150,7 @@ namespace Model
 
 			Team_memberDAO.DeleteTeam_members (connection, team_members);
 
-			//todo for every employee qualif
+
 
 		}
 

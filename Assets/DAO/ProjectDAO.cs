@@ -80,7 +80,7 @@ public class ProjectDAO {
 
 	public static void UpdateProgress(MySqlConnection _connection, Project project, DateTime salary_payment_date) 
 	{
-		string Query = "SELECT Employee.id, count(Salary_payment.hours_worked) as hours_worked, Role.title, Employee.Qualification " +
+		string Query = "SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Role.title, Employee.Qualification " +
 						"FROM Project, Team_member, Employee, Salary_payment, Role " + 
 						"WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id " +
 						"AND Employee.Id=Salary_payment.Employee_id AND Employee.Role_id=Role.Id AND Project.Id=" + project.Id + " AND Salary_payment.date='" 
@@ -144,10 +144,27 @@ public class ProjectDAO {
 			          testing_hours + "!!!"+ design_hours + "!!!");
 			//projects.Add(project);
 
+			
 
-
-		Debug.Log ("Progress updated " + project.Id);
-		
+			Debug.Log ("Progress updated " + project.Id);		
 	}
-	
+	//						employees[employees.Count-1].Qualification += 
+	public static void DeleteCharacters (MySqlConnection _connection, List<Project> projects){		
+		foreach (Project project in projects) {
+			_connection.Open ();
+			string Query = "DELETE FROM `project` WHERE id="+project.Id+ ";";
+			MySqlCommand command = new MySqlCommand (Query, _connection);
+			
+			command.ExecuteReader ();
+			Debug.Log ("Delete project " + project.Id);
+			_connection.Close ();
+		}
+	} 
+	/*
+SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Employee.Qualification
+FROM Project, Team_member, Employee, Salary_payment
+WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id
+AND Employee.Id=Salary_payment.Employee_id AND Project.Id=1 AND 
+Salary_payment.`date`='2014-05-15' group by Employee.id;
+*/
 }

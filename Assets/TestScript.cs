@@ -4,7 +4,7 @@ using MySql.Data.MySqlClient;
 using System;
 using Model;
 using System.Collections.Generic;
-using System.Data;
+
 
 public class TestScript : MonoBehaviour {
 

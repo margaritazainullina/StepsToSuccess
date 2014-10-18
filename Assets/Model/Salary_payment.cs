@@ -27,11 +27,11 @@ namespace Model
 
 		public DateTime Date { get; set; }
 		public int? Hours_worked { get; set; }
-		public double? Salary { get; set; }
+		public decimal? Salary { get; set; }
 
 		public Int64 Employee_id { get; set; }
 
-		public Salary_payment(Int64 id, DateTime date, int? hours_worked, double? salary,
+		public Salary_payment(Int64 id, DateTime date, int? hours_worked, decimal? salary,
 		                      Int64 employee_id)
 		{
 			Id = id;

@@ -22,7 +22,7 @@ public class Salary_paymentDAO {
 			Int64 id = Convert.ToInt64(data["id"]);
 			DateTime date = Convert.ToDateTime(data["date"]);
 			int? hours_worked = Helper.GetValueOrNull<int>(Convert.ToString(data["hours_worked"]));
-			double? salary = Helper.GetValueOrNull<double>(Convert.ToString(data["salary"]));
+			decimal? salary = Helper.GetValueOrNull<decimal>(Convert.ToString(data["salary"]));
 			Int64 employee_id = Convert.ToInt64(data["employee_id"]);
 
 			Salary_payment salary_payment = new Salary_payment(id, date, hours_worked, salary, employee_id);

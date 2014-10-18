@@ -44,16 +44,34 @@ namespace Model
 			Taxation_id = taxation_id;
 		}
 
-		public void PaySalary(MySqlConnection connection, Employee employee, int hours_worked)
+		public void PaySalary(MySqlConnection connection, Employee employee, int hours_worked, DateTime date)
 		{
 			Salary_payment salary_payment = new Salary_payment (0, DateTime.Now, hours_worked, 
-			                                                   hours_worked * employee.Qualification, employee.Id);
+			                                                    (decimal?)(hours_worked * employee.Qualification), employee.Id);
 			Salary_paymentDAO.InsertSalary_payments (connection, new List<Salary_payment> () { salary_payment });
-			Project projects = ProjectDAO.GetProjects (connection);
+
+			List<Project> projects = ProjectDAO.GetProjects (connection);
+			string Query;
+
+
 			foreach (Project project in projects) 
 			{
-				project.Expenditures += 5;
+				Query = "SELECT sum(Salary_payment.salary) as salary FROM Salary_payment, Employee, Team_member, Project" +
+					"WHERE Employee.Id=Salary_payment.Employee_id AND" +
+						"Employee.Id = Team_member.Employee_id AND Team_member.Project_id = Project.id " +
+						"AND Salary_payment.`date`='" + date + "' AND Project.id=" + project.Id + ";";
+				MySqlCommand command = connection.CreateCommand();
+				command.CommandText = Query;
+				MySqlDataReader data = command.ExecuteReader();
+
+				while (data.Read()){
+					project.Expenditures += Convert.ToDecimal(data["salary"]);
+				}
+
+				this.Balance -= project.Expenditures;
+
 			}
+			ProjectDAO.UpdateProjects (connection, projects);
 		}
 
 
