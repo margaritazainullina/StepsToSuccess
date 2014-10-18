@@ -25,10 +25,10 @@ public class ProjectDAO {
 			DateTime real_end_date = Convert.ToDateTime(data["real_end_date"]);
 			int state = Convert.ToInt32(data["state"]);
 			decimal stated_budget = Convert.ToDecimal(data["stated_budget"]);
-			decimal real_budget = Convert.ToDecimal(data["real_budget"]);
+			decimal expenditures = Convert.ToDecimal(data["expenditures"]);
 			
 			Project project = new Project(id, planned_begin_date, planned_end_date, real_begin_date, real_end_date, 
-			                              state, stated_budget, real_budget, _connection);
+			                              state, stated_budget, expenditures, _connection);
 			Debug.Log("Get character "+ id);
 			projects.Add(project);
 		}
@@ -41,7 +41,7 @@ public class ProjectDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `project` values(" + project.Id + ",'" + Helper.ToMySQLDateTimeFormat(project.Planned_begin_date) + "','" + 
 				Helper.ToMySQLDateTimeFormat(project.Planned_end_date) + "','" + Helper.ToMySQLDateTimeFormat(project.Real_begin_date) + "','" + Helper.ToMySQLDateTimeFormat(project.Real_end_date) + "'," + 
-					project.State + "," + project.Stated_budget + "," + project.Real_budget + ");";
+					project.State + "," + project.Stated_budget + "," + project.Expenditures + ");";
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
 
@@ -56,7 +56,7 @@ public class ProjectDAO {
 			_connection.Open ();
 			string Query = "UPDATE `project` SET planned_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Planned_begin_date) + "', planned_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Planned_end_date) + 
 				"', real_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Real_begin_date) + "', real_end_date='" + Helper.ToMySQLDateTimeFormat(project.Real_end_date) + 
-					"', state=" + project.State + ", stated_budget=" + project.Stated_budget + ", real_budget=" + project.Real_budget + " where id=" + project.Id + ";";
+					"', state=" + project.State + ", stated_budget=" + project.Stated_budget + ", expenditures=" + project.Expenditures + " where id=" + project.Id + ";";
 			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
 

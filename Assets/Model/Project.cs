@@ -23,7 +23,7 @@ namespace Model
 		public DateTime Real_end_date { get; set; }
 		public int State { get; set; }
 		public decimal Stated_budget { get; set; } 
-		public decimal Real_budget { get; set; }
+		public decimal Expenditures { get; set; }
 		
 		public virtual ICollection<Human_resources> Human_resources {get; set;}
 		public virtual ICollection<Product> Product {get; set;}
@@ -32,7 +32,7 @@ namespace Model
 		
 		public Project (Int64 id, DateTime planned_begin_date, DateTime planned_end_date,
 		                DateTime real_begin_date, DateTime real_end_date, int state, 
-		                decimal stated_budget, decimal real_budget, MySqlConnection connection)
+		                decimal stated_budget, decimal expenditures, MySqlConnection connection)
 		{		                
 			Planned_begin_date = planned_begin_date;
 			Planned_end_date = planned_end_date;
@@ -41,7 +41,7 @@ namespace Model
 			Real_end_date = real_end_date;
 			State = state;
 			Stated_budget = stated_budget;
-			Real_budget = real_budget;
+			Expenditures = expenditures;
 			
 			//ProjectDAO.InsertProjects(connection, new List<Project>{this});
 		} //add to all models functions or a class?
@@ -98,7 +98,7 @@ namespace Model
 		public void Complete(MySqlConnection connection, string product_title)
 		{
 			//id
-			decimal prime_cost = this.Stated_budget - this.Real_budget;
+			decimal prime_cost = this.Stated_budget - this.Expenditures;
 			double quality = 1 + Convert.ToDouble(prime_cost) / Convert.ToDouble(this.Stated_budget) + 1 + 
 				(this.Real_end_date - this.Planned_end_date).TotalDays/(this.Planned_end_date-this.Planned_begin_date).TotalDays;
 

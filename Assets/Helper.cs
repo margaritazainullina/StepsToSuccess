@@ -40,10 +40,15 @@ namespace AssemblyCSharp
 
 		public static string ReplaceUpdateQueryVoidWithNulls(string expression)
 		{
-			expression = Regex.Replace (expression, @"(\w*)=,", @"\1=null,");
-			expression = Regex.Replace (expression, @"(\w*)=", @"\1=null");
+			expression = Regex.Replace (expression, @"(\w*)=,", @"$1=null,");
+			expression = Regex.Replace (expression, @"(\w*)=\s*where", @"$1=null where");
+			/*foreach (Match match in Regex.Matches(expression, @"(\w*)=,", RegexOptions.IgnoreCase)) {
+								expression += match.Groups [1].Value + "=null,";
+						}*/
 			return expression;
 		}
+
+
 	}
 }
 

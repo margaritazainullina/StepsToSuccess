@@ -46,11 +46,14 @@ namespace Model
 
 		public void PaySalary(MySqlConnection connection, Employee employee, int hours_worked)
 		{
-			 //receive list or each time call fx
-			//id?
-			Salary_payment salary_payment = new Salary_payment (1, DateTime.Now, hours_worked, 
+			Salary_payment salary_payment = new Salary_payment (0, DateTime.Now, hours_worked, 
 			                                                   hours_worked * employee.Qualification, employee.Id);
 			Salary_paymentDAO.InsertSalary_payments (connection, new List<Salary_payment> () { salary_payment });
+			Project projects = ProjectDAO.GetProjects (connection);
+			foreach (Project project in projects) 
+			{
+				project.Expenditures += 5;
+			}
 		}
 
 
