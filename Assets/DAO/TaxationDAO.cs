@@ -45,10 +45,10 @@ public class TaxationDAO {
 			string Query = "INSERT INTO `taxation` values(" + taxation.Id + "," + taxation.Taxation_group + "," + 
 				taxation.Max_revenue + "," + taxation.Max_employee + "," + taxation.VAT + "," + taxation.Income_duty + ");";
 			
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Insert role " + taxation.Id);
 			_connection.Close ();
@@ -60,11 +60,11 @@ public class TaxationDAO {
 			string Query = "UPDATE `taxation` SET taxation_group=" + taxation.Taxation_group + ", max_revenue=" + taxation.Max_revenue + 
 				", max_employee=" + taxation.Max_employee + ", VAT=" + taxation.VAT + ", income_duty=" + taxation.Income_duty + " where id=" + taxation.Id + ";";
 			
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			
 
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Update role " + taxation.Id);
 			_connection.Close ();
@@ -76,7 +76,7 @@ public class TaxationDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `taxation` WHERE id="+taxation.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Delete role " + taxation.Id);
 			_connection.Close ();

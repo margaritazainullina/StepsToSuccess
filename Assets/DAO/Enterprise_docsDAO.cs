@@ -38,8 +38,9 @@ public class Enterprise_docsDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `enterprise_docs` values(" + enterprise_doc.Document_id + "," + enterprise_doc.Availability + 
 				"," + enterprise_doc.Is_active + ",'" + Helper.ToMySQLDateTimeFormat(enterprise_doc.Expiration_date) + "'," + enterprise_doc.Enterprise_id + ");";
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Insert enterprise_doc " + enterprise_doc.Document_id);
 			_connection.Close ();
@@ -52,8 +53,9 @@ public class Enterprise_docsDAO {
 			string Query = "UPDATE `enterprise_docs` SET availability=" + enterprise_doc.Availability + ", is_active=" + 
 				enterprise_doc.Is_active + ", expiration_date='" + Helper.ToMySQLDateTimeFormat(enterprise_doc.Expiration_date) + "', enterprise_id=" + 
 					enterprise_doc.Enterprise_id + " where id=" + enterprise_doc.Document_id + ";";
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Update character " + enterprise_doc.Document_id);
 			_connection.Close ();
@@ -65,7 +67,7 @@ public class Enterprise_docsDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `enterprise_docs` WHERE id="+enterprise_doc.Document_id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete enterprise_doc " + enterprise_doc.Document_id);
 			_connection.Close ();

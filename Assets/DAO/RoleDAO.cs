@@ -41,8 +41,10 @@ public class RoleDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `role` values(" + role.Id + ",'" + role.Title + "'," + 
 				role.Min_salary + "," + role.Max_salary + ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Insert role " + role.Title);
 			_connection.Close ();
@@ -53,8 +55,10 @@ public class RoleDAO {
 			_connection.Open ();
 			string Query = "UPDATE `role` SET title='" + role.Title + "', min_salary=" + role.Min_salary + 
 				", max_salary=" + role.Max_salary + " where id=" + role.Id + ";";
+
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Update role " + role.Title);
 			_connection.Close ();
@@ -65,8 +69,11 @@ public class RoleDAO {
 		foreach (Role role in roles) {
 			_connection.Open ();
 			string Query = "DELETE FROM `role` WHERE id="+role.Id+ ";";
+
+
+
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete role " + role.Title);
 			_connection.Close ();

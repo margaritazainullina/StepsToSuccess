@@ -37,8 +37,10 @@ public class Human_resourcesDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `human_resources` values(" + hr.Id + "," + hr.Hours + "," +
 				hr.Project_id + "," + hr.Role_id + ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Insert HR id="+hr.Id);
 			_connection.Close();
@@ -49,8 +51,11 @@ public class Human_resourcesDAO {
 			_connection.Open ();
 			string Query = "UPDATE `human_resources` SET hour=" + hr.Hours + ", project_id=" + hr.Project_id + 
 				", role_id=" + hr.Role_id  + " where id=" + hr.Id + ";";
+
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
+
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Update HR id="+hr.Id);
 			_connection.Close();
@@ -62,7 +67,7 @@ public class Human_resourcesDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `human_resources` WHERE id="+hr.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Delete HR id="+hr.Id);
 			_connection.Close ();

@@ -50,10 +50,9 @@ public class Team_memberDAO {
 			
 			string Query = "INSERT INTO `asset` values(" + team_member.Employee_id + "," + team_member.Project_id + ");";
 			
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			
 			MySqlCommand command = new MySqlCommand (Query, _connection);
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
 			command.ExecuteReader();
 			_connection.Close ();
 			Debug.Log("Inserted Team_member employee_id="+team_member.Employee_id+" and project_id="+team_member.Project_id);
@@ -65,7 +64,7 @@ public class Team_memberDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `asset` WHERE employee_id="+team_member.Employee_id+" AND project_id=" + team_member.Project_id + ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log("Deleted Team_member employee_id="+team_member.Employee_id+" and project_id="+team_member.Project_id);
 			_connection.Close ();

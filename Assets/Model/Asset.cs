@@ -15,7 +15,7 @@ namespace Model
 	public class Asset 
 	{	//MAKE dao CLASS STATIC //ENTERPRISE TABLE CONNECTION!
 		public Int64 Id { get; set; }
-		public int Value { get; set; }
+		public decimal Value { get; set; }
 		public DateTime Asset_date { get; set; }
 
 		public Int64 Enterprise_id { get; set; }
@@ -26,7 +26,7 @@ namespace Model
 		public virtual Purchase Purchase {get; set;}
 		public virtual Service Service {get; set;} 
 
-		public Asset (Int64 id, int value, DateTime asset_date, Int64 enterprise_id)
+		public Asset (Int64 id, decimal value, DateTime asset_date, Int64 enterprise_id)
 		{
 			Id = id;
 			Value = value;

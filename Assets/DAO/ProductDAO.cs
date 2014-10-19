@@ -39,8 +39,10 @@ public class ProductDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `product` values(" + product.Id + ",'" + product.Title + "'," + 
 				product.Price + "," + product.Quality + "," + product.Prime_cost + "," + product.Project_id + ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Insert product " + product.Title);
 			_connection.Close ();
@@ -51,8 +53,10 @@ public class ProductDAO {
 			_connection.Open ();
 			string Query = "UPDATE `product` SET title='" + product.Title + "', price=" + product.Price + 
 				", quality=" + product.Quality + ", prime_cost=" + product.Prime_cost +", project_id=" + product.Project_id + " where id=" + product.Id + ";";
+
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Update product " + product.Title);
 			_connection.Close ();
@@ -64,7 +68,7 @@ public class ProductDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `product` WHERE id="+product.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Delete product " + product.Title);
 			_connection.Close ();

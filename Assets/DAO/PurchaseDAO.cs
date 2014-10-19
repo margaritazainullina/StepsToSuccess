@@ -13,7 +13,7 @@ public class PurchaseDAO {
 	{		
 		List<Purchase> purchases = new List<Purchase>();
 
-		_connection.Open ();
+		_connection.Open();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
 		command.CommandText = "SELECT * FROM `purchase`";
@@ -102,8 +102,9 @@ public class PurchaseDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `purchase` values(" + purchase.Id + "," + purchase.Quantity + "," + 
 				purchase.Equipment_id + "," + purchase.Asset_id + ");";
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Insert purchase " + purchase.Id);
 			_connection.Close ();
@@ -114,8 +115,9 @@ public class PurchaseDAO {
 			_connection.Open ();
 			string Query = "UPDATE `purchase` SET quantity=" + purchase.Quantity + ", equipment_id=" + purchase.Equipment_id + 
 				", asset_id=" + purchase.Asset_id + " where id=" + purchase.Id + ";";
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Update purchase " + purchase.Id);
 			_connection.Close ();
@@ -127,7 +129,7 @@ public class PurchaseDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `purchase` WHERE id="+purchase.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Delete purchase " + purchase.Id);
 			_connection.Close ();

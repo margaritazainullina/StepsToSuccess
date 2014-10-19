@@ -42,8 +42,10 @@ public class Enterprise_equipmentDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `enterprise_equipment` values(" + enterprise_equip.Enterprise_id + "," + enterprise_equip.Equipment_id + ",'" + 
 				Helper.ToMySQLDateTimeFormat(enterprise_equip.Purchase_date) + "'," + enterprise_equip.Quantity + "," + enterprise_equip.Lease_term + "," + enterprise_equip.IsRunning + ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Insert enterprise_equip Enterprise_id="+enterprise_equip.Enterprise_id+" and Equipment_id="+enterprise_equip.Equipment_id);
 			_connection.Close ();
@@ -55,8 +57,9 @@ public class Enterprise_equipmentDAO {
 			_connection.Open ();
 			string Query = "UPDATE `enterprise_equipment` SET purchase_date='" + Helper.ToMySQLDateTimeFormat(enterprise_equip.Purchase_date) + "', quantity=" + enterprise_equip.Quantity + 
 				", lease_term=" + enterprise_equip.Lease_term + ", isRunning=" + enterprise_equip.IsRunning  + " where enterprise_id=" + enterprise_equip.Enterprise_id + " AND equipment_id=" + enterprise_equip.Equipment_id + ";";
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Update enterprise_equip Enterprise_id="+enterprise_equip.Enterprise_id+" and Equipment_id="+enterprise_equip.Equipment_id);
 			_connection.Close ();
@@ -68,7 +71,7 @@ public class Enterprise_equipmentDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `enterprise_equipment` WHERE enterprise_id=" + enterprise_equip.Enterprise_id + " AND equipment_id=" + enterprise_equip.Equipment_id + ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Delete asset enterprise_equip Enterprise_id="+enterprise_equip.Enterprise_id+" and Equipment_id="+enterprise_equip.Equipment_id);
 			_connection.Close ();

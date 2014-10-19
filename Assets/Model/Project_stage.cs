@@ -14,7 +14,8 @@ namespace Model
 {
 	public class Project_stage
 	{
-		public Int64 Id { get; set; }
+		
+		public Int64 Project_id { get; set; }
 
 		public int? Conception_hours { get; set; }
 		public int? Programming_hours { get; set; }
@@ -26,15 +27,11 @@ namespace Model
 		public double? Testing_done { get; set; }
 		public double? Design_done { get; set; }
 
-		public Int64 Project_id { get; set; }
-
 		public virtual Project Project { get; set; }
 		
-		public Project_stage(Int64 id, int? conception_hours, int? programming_hours, int? testing_hours, int? design_hours,
-		                     double? conception_done, double? programming_done, double? testing_done, double? design_done,
-		                     Int64 project_id)
+		public Project_stage(Int64 project_id, int? conception_hours, int? programming_hours, int? testing_hours, int? design_hours,
+		                     double? conception_done, double? programming_done, double? testing_done, double? design_done)
 		{
-			Id = id;
 			Conception_hours = conception_hours;
 			Programming_hours = programming_hours;
 			Testing_hours = testing_hours;
@@ -46,9 +43,9 @@ namespace Model
 			Project_id = project_id;
 		}
 
-		public Project_stage(Int64 id, int? conception_hours, int? programming_hours, int? testing_hours, 
-		                     int? design_hours, Int64 project_id)
-			:this(id,conception_hours,programming_hours,testing_hours,design_hours,null,null,null,null,project_id)
+		public Project_stage(Int64 project_id, int? conception_hours, int? programming_hours, int? testing_hours, 
+		                     int? design_hours)
+			:this(project_id,conception_hours,programming_hours,testing_hours,design_hours,null,null,null,null)
 		{
 
 		}

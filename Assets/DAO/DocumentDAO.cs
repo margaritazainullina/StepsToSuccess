@@ -38,8 +38,10 @@ public class DocumentDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `document` values(" + document.Id + ",'" + document.Title + "','" + 
 				document.Type + "'," + document.Path + ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Insert document " + document.Title);
 			_connection.Close ();
@@ -50,8 +52,10 @@ public class DocumentDAO {
 			_connection.Open ();
 			string Query = "UPDATE `document` SET title='" + document.Title + "', type='" + document.Type + 
 				"', path=" + document.Path  + " where id=" + document.Id + ";";
+
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Update document " + document.Title);
 			_connection.Close ();
@@ -63,7 +67,7 @@ public class DocumentDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `document` WHERE id="+document.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete document " + document.Title);
 			_connection.Close ();

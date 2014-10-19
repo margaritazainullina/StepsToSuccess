@@ -60,8 +60,10 @@ public class EquipmentDAO {
 		foreach (Equipment equip in equipment) {
 			_connection.Open ();
 			string Query = "INSERT INTO `equipment` values(" + equip.Id + "," + equip.Title + "," + equip.Price + ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader();
 			Debug.Log("Insert piece of equipment of type = " + equip.Title);
 			_connection.Close ();
@@ -71,8 +73,11 @@ public class EquipmentDAO {
 		foreach (Equipment equip in equipment) {
 			_connection.Open ();
 			string Query = "UPDATE `equipment` SET title=" + equip.Title + ", price=" + equip.Price + " where id=" + equip.Id + ";";
+
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
+
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log("Update piece of equipment of type =" + equip.Title);
 			_connection.Close ();
@@ -83,8 +88,10 @@ public class EquipmentDAO {
 		foreach (Equipment equip in equipment) {
 			_connection.Open ();
 			string Query = "DELETE FROM `character` WHERE id="+equip.Id+ ";";
+
+
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log("Delete piece of equipment of type =" + equip.Title);
 			_connection.Close ();

@@ -52,10 +52,10 @@ public class AssetDAO {
 			string Query = "INSERT INTO `asset` values(" + asset.Id + "," + asset.Value + ",'" + Helper.ToMySQLDateTimeFormat(asset.Asset_date) 
 				+ "'," + asset.Enterprise_id + ");";
 
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader();
 			_connection.Close ();
 			Debug.Log ("Insert asset id="+asset.Id+" and value="+asset.Value);
@@ -68,10 +68,10 @@ public class AssetDAO {
 			string Query = "UPDATE `asset` SET value='" + asset.Value + "', asset_date='" + Helper.ToMySQLDateTimeFormat(asset.Asset_date) + "', enterprise_id=" + 
 				asset.Enterprise_id +  " where id=" + asset.Id + ";";
 			
-			Query = Helper.ReplaceQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Update asset id="+asset.Id+" and value="+asset.Value);
 			_connection.Close ();
@@ -83,7 +83,7 @@ public class AssetDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `asset` WHERE id="+asset.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete asset id="+asset.Id+" and value="+asset.Value);
 			_connection.Close ();

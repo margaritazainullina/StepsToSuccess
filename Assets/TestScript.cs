@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using MySql.Data.MySqlClient;
 using System;
 using Model;
 using System.Collections.Generic;
+
 
 public class TestScript : MonoBehaviour {
 
@@ -18,9 +19,10 @@ public class TestScript : MonoBehaviour {
 
 		MySqlConnection connection = new MySqlConnection(source);
 
-	/*	Project project = new Project (3, new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), new DateTime(2014,05,25), 0, 1000, 0, connection);
-		project.Start (connection);
-
+		/*
+		Project project = ProjectDAO.GetProjects(connection)[0];
+		project.MakeProgress(connection, new DateTime(2014,05,15));
+		*/
 
 		/*AssetTest (connection);
 		CharacterTest (connection);
@@ -46,9 +48,11 @@ public class TestScript : MonoBehaviour {
 		TaxationTest (connection);
 		Team_memberTest (connection);*/
 
-		Enterprise e = new Enterprise(6, "MyEnterprise", 500.23M, 2.5, 0, 1);		
-		EnterpriseDAO.InsertEnterprises (connection, new List<Enterprise>(){ e});
+		Enterprise e = new Enterprise(8, "MyEnterprise", 500.23M, 2.5, 0, 1);		
+		Enterprise e1 = new Enterprise(9, "MyEnterprise", 500.23M, 2.5, 1, 1);
+		EnterpriseDAO.InsertEnterprises (connection, new List<Enterprise>(){ e, e1});
 		e.CompleteDocuments (connection);
+		e1.CompleteDocuments (connection);
 	}
 
 	void AssetTest(MySqlConnection connection)

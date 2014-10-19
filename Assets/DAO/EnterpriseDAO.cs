@@ -67,8 +67,10 @@ public class EnterpriseDAO { //SINGLETONE
 			_connection.Open ();
 			string Query = "INSERT INTO `enterprise` values(" + enterprise.Id + ",'" + enterprise.Title + "'," + enterprise.Balance + "," + 
 				enterprise.Stationary + "," + enterprise.Type + "," + enterprise.Taxation_id + ");";
+
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Insert enterprise " + enterprise.Title);
 			_connection.Close ();
@@ -80,8 +82,10 @@ public class EnterpriseDAO { //SINGLETONE
 			_connection.Open ();
 			string Query = "UPDATE `enterprise` SET title='" + enterprise.Title + "', balance=" + enterprise.Balance + ", stationary=" + enterprise.Stationary + 
 				", type=" + enterprise.Type + ", taxation_id=" + enterprise.Taxation_id + " where id=" + enterprise.Id + ";";
+
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Update enterprise " + enterprise.Title);
 			_connection.Close ();
@@ -93,7 +97,7 @@ public class EnterpriseDAO { //SINGLETONE
 			_connection.Open ();
 			string Query = "DELETE FROM `enterprise` WHERE id="+enterprise.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Delete enterprise " + enterprise.Title);
 			_connection.Close ();

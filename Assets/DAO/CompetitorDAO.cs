@@ -37,8 +37,9 @@ public class CompetitorDAO {
 			_connection.Open ();
 			string Query = "INSERT INTO `competitor` values(" + compatitor.Id + ",'" + compatitor.Title + "'," + 
 				compatitor.Success_rate + "," + compatitor.Enterprise_id + ");";
+			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+ 
 			command.ExecuteReader ();
 			Debug.Log ("Insert competitor " + compatitor.Title);
 			_connection.Close ();
@@ -49,8 +50,9 @@ public class CompetitorDAO {
 			_connection.Open ();
 			string Query = "UPDATE `competitor` SET title='" + compatitor.Title + "', success_rate=" + compatitor.Success_rate +
 				", enterprise_id=" + compatitor.Enterprise_id  + " where id=" + compatitor.Id + ";";
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Update competitor " + compatitor.Title);
 			_connection.Close ();
@@ -62,7 +64,7 @@ public class CompetitorDAO {
 			_connection.Open ();
 			string Query = "DELETE FROM `competitor` WHERE id="+compatitor.Id+ ";";
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- Query = Helper.ReplaceQueryVoidWithNulls(Query);
+
 			command.ExecuteReader ();
 			Debug.Log ("Delete competitor " + compatitor.Title);
 			_connection.Close ();

@@ -30,13 +30,24 @@ namespace AssemblyCSharp
 			return formattedDate;
 		}
 
-		public static string ReplaceQueryVoidWithNulls(string expression)
+		public static string ReplaceInsertQueryVoidWithNulls(string expression)
 		{
 			expression = Regex.Replace (expression, @"(\()\s*(,\s*)", @"(null,");
 			expression = Regex.Replace (expression, @"\s*(,\s*)(\))", @",null)");
 			expression = Regex.Replace (expression, @"(,\s*)(,\s*)", @",null,");
 			return expression;
 		}
+
+		public static string ReplaceUpdateQueryVoidWithNulls(string expression)
+		{
+			expression = Regex.Replace (expression, @"(\w*)=,", @"$1=null,");
+			expression = Regex.Replace (expression, @"(\w*)=\s*where", @"$1=null where");
+			/*foreach (Match match in Regex.Matches(expression, @"(\w*)=,", RegexOptions.IgnoreCase)) {
+								expression += match.Groups [1].Value + "=null,";
+						}*/
+			return expression;
+		}
+
 
 	}
 }

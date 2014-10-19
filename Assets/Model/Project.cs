@@ -23,7 +23,7 @@ namespace Model
 		public DateTime Real_end_date { get; set; }
 		public int State { get; set; }
 		public decimal Stated_budget { get; set; } 
-		public decimal Real_budget { get; set; }
+		public decimal Expenditures { get; set; }
 		
 		public virtual ICollection<Human_resources> Human_resources {get; set;}
 		public virtual ICollection<Product> Product {get; set;}
@@ -32,7 +32,7 @@ namespace Model
 		
 		public Project (Int64 id, DateTime planned_begin_date, DateTime planned_end_date,
 		                DateTime real_begin_date, DateTime real_end_date, int state, 
-		                decimal stated_budget, decimal real_budget, MySqlConnection connection)
+		                decimal stated_budget, decimal expenditures, MySqlConnection connection)
 		{		                
 			Planned_begin_date = planned_begin_date;
 			Planned_end_date = planned_end_date;
@@ -41,9 +41,9 @@ namespace Model
 			Real_end_date = real_end_date;
 			State = state;
 			Stated_budget = stated_budget;
-			Real_budget = real_budget;
+			Expenditures = expenditures;
 			
-			ProjectDAO.InsertProjects(connection, new List<Project>{this});
+			//ProjectDAO.InsertProjects(connection, new List<Project>{this});
 		} //add to all models functions or a class?
 
 		public Project (DateTime planned_begin_date, DateTime planned_end_date,
@@ -89,26 +89,28 @@ namespace Model
 			ProjectDAO.UpdateProjects (connection, projects);
 		}
 
-		public void MakeProgress(MySqlConnection connection, DateTime date)
+		public void MakeProgress(MySqlConnection connection, DateTime salary_payment_date)
 		{
-			ProjectDAO.UpdateProgress(connection, this, date);
+			ProjectDAO.UpdateProgress(connection, this, salary_payment_date);
+
 		}
 
 		public void Complete(MySqlConnection connection, string product_title)
 		{
 			//id
-			decimal prime_cost = this.Stated_budget - this.Real_budget;
+			decimal prime_cost = this.Stated_budget - this.Expenditures;
 			double quality = 1 + Convert.ToDouble(prime_cost) / Convert.ToDouble(this.Stated_budget) + 1 + 
 				(this.Real_end_date - this.Planned_end_date).TotalDays/(this.Planned_end_date-this.Planned_begin_date).TotalDays;
 
-			Product product = new Product (1, product_title, prime_cost,
+			Product product = new Product (0, product_title, prime_cost,
 			                              quality, prime_cost, this.Id);
-			//like in ended
+			ProductDAO.InsertProducts (connection, new List<Product> () { product });
 
 			this.State = 2;
 			List<Project> projects = new List<Project> ();
 			projects.Add (this);
 			ProjectDAO.UpdateProjects (connection, projects);
+
 			List<Team_member> team_members;
 			if (quality > 1) 
 			{
@@ -120,18 +122,23 @@ namespace Model
 						team_members.Remove(team_member);
 					}
 				}
-				//get employee by id
-				/*List<Employee> employees = EmployeeDAO.GetEmployees (connection);
-				foreach (Employee employee in employees) 
+
+				List<Employee> employees = new List<Employee>();
+				foreach (Team_member team_member in team_members) 
 				{
-					if(team_member.Project_id != this.Id)
+					if(team_members[0].Project_id != this.Id)
 					{
-						employees.Remove(employee);
+						employees.Add(EmployeeDAO.GetEmployeeById(connection, this.Id));
 					}
-				}*/
+				}
+
+				EmployeeDAO.UpdateEmployees(connection, employees);
 			}
 
 
+
+
+			//delete team members
 			team_members = Team_memberDAO.GetTeam_members (connection);
 			foreach (Team_member team_member in team_members) 
 			{
@@ -140,6 +147,7 @@ namespace Model
 					team_members.Remove(team_member);
 				}
 			}
+
 			Team_memberDAO.DeleteTeam_members (connection, team_members);
 
 
