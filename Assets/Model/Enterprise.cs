@@ -212,18 +212,36 @@ namespace Model
 						s[9]+DateTime.Now.ToString ("dd.MM.yyyy");
 			}
 			Debug.Log("Enterprise.CompleteDocuments(): "+document);
-			return document;}
-		
-		public void PaySalary(MySqlConnection connection, Employee employee, int hours_worked)
+			return document;}		
+
+		public void PaySalary(MySqlConnection connection, Employee employee, int hours_worked, DateTime date)
 		{
-			//receive list or each time call fx
-			//id?
-			decimal amountOfSalaryPaidToday = (decimal)(hours_worked * employee.Qualification);
-			Salary_payment salary_payment = new Salary_payment (1, DateTime.Now, hours_worked, 
-			                                                    (decimal?)amountOfSalaryPaidToday, employee.Id);
-						Salary_paymentDAO.InsertSalary_payments (connection, new List<Salary_payment> () { salary_payment });
-			Balance -= amountOfSalaryPaidToday;
-			PayUST (connection, amountOfSalaryPaidToday);
+			Salary_payment salary_payment = new Salary_payment (0, DateTime.Now, hours_worked, 
+			                                                    (decimal?)(hours_worked * employee.Qualification), employee.Id);
+			Salary_paymentDAO.InsertSalary_payments (connection, new List<Salary_payment> () { salary_payment });
+
+			List<Project> projects = ProjectDAO.GetProjects (connection);
+			string Query;
+
+
+			foreach (Project project in projects) 
+			{
+				Query = "SELECT sum(Salary_payment.salary) as salary FROM Salary_payment, Employee, Team_member, Project" +
+					"WHERE Employee.Id=Salary_payment.Employee_id AND" +
+						"Employee.Id = Team_member.Employee_id AND Team_member.Project_id = Project.id " +
+						"AND Salary_payment.`date`='" + date + "' AND Project.id=" + project.Id + ";";
+				MySqlCommand command = connection.CreateCommand();
+				command.CommandText = Query;
+				MySqlDataReader data = command.ExecuteReader();
+
+				while (data.Read()){
+					project.Expenditures += Convert.ToDecimal(data["salary"]);
+				}
+
+				this.Balance -= project.Expenditures;
+				PayUST (connection, project.Expenditures);
+			}
+			ProjectDAO.UpdateProjects (connection, projects);
 		}
 		
 		public void PayUST(MySqlConnection connection, decimal amountOfSalaryPaidToday){
@@ -242,7 +260,7 @@ namespace Model
 				//if a loan hasn't been disbursed yet
 				if(a.Service.Period<a.Service.PeriodsPaid){
 					a.Service.PeriodsPaid++;
-					Balance -= (a.Service.Company.Investment*a.Service.Company.Share)/a.Service.Period;
+					Balance -= (a.Service.Company.Investment*(decimal)a.Service.Company.Share)/(decimal)a.Service.Period;
 				}
 			}
 		}
@@ -250,7 +268,8 @@ namespace Model
 		public void SharePayout(MySqlConnection connection){
 			//budget -= ∑ (revenue.Value за последний месяц)*share
 			foreach (Asset a in Assets) {
-				Balance -= TotalIncomeForPeriod(DateTime.DaysInMonth)*a.Service.Company.Share;
+				decimal income = TotalIncomeForPeriod(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+				Balance -= income*(decimal)a.Service.Company.Share;
 			}
 		}
 	}

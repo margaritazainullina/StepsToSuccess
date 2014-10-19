@@ -19,7 +19,9 @@ public class TestScript : MonoBehaviour {
 
 		MySqlConnection connection = new MySqlConnection(source);
 
-		/*
+
+		//DataSet ds = new DataSet("tab1");
+				/*
 		Project project = ProjectDAO.GetProjects(connection)[0];
 		project.MakeProgress(connection, new DateTime(2014,05,15));
 		*/
