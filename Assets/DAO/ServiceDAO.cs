@@ -24,6 +24,7 @@ public class ServiceDAO {
 			Int64 id = Convert.ToInt64(data["id"]);
 			decimal price = Convert.ToDecimal(data["price"]);
 			int period = Convert.ToInt32(data["period"]);
+			int periodsPaid = Convert.ToInt32(data["periodsPaid"]);
 			Int64 asset_id = Convert.ToInt64(data["asset_id"]);
 			Int64 action_id = Convert.ToInt64(data["action_id"]);
 			decimal effectiveness = Convert.ToDecimal(data["effectiveness"]);
@@ -66,7 +67,7 @@ public class ServiceDAO {
 		foreach (Service service in services) {
 			_connection.Open ();
 			string Query = "INSERT INTO `service` values(" + service.Id + ",'" + service.Title + "'," + 
-				service.Price + "," + service.Period + "," + service.Effectiveness + "," + service.Asset_id + "," + service.Company_id + ");";
+				service.Price + "," + service.Period+ "," + service.PeriodsPaid + "," + service.Effectiveness + "," + service.Asset_id + "," + service.Company.Id + ");";
 			
 			
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -82,8 +83,8 @@ public class ServiceDAO {
 		foreach (Service service in services) {
 			_connection.Open ();
 			string Query = "UPDATE `service` SET title='" + service.Title + "', price=" + service.Price + 
-				", period=" + service.Period + ", effectiveness=" + service.Effectiveness + ", asset_id=" + 
-					service.Asset_id + ", company_id=" + service.Company_id  + " where id=" + service.Id + ";";
+				", period=" + service.Period + ", period=" + service.PeriodsPaid +", effectiveness=" + service.Effectiveness + ", asset_id=" + 
+					service.Asset_id + ", company_id=" + service.Company.Id  + " where id=" + service.Id + ";";
 			
 			
 			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);

@@ -19,9 +19,9 @@ public class TestScript : MonoBehaviour {
 
 		MySqlConnection connection = new MySqlConnection(source);
 
-		//DataSet ds = new DataSet("tab1");
 
-		/*
+		//DataSet ds = new DataSet("tab1");
+				/*
 		Project project = ProjectDAO.GetProjects(connection)[0];
 		project.MakeProgress(connection, new DateTime(2014,05,15));
 		*/
@@ -49,6 +49,12 @@ public class TestScript : MonoBehaviour {
 		ServiceTest (connection);		
 		TaxationTest (connection);
 		Team_memberTest (connection);*/
+
+		Enterprise e = new Enterprise(8, "MyEnterprise", 500.23M, 2.5, 0, 1);		
+		Enterprise e1 = new Enterprise(9, "MyEnterprise", 500.23M, 2.5, 1, 1);
+		EnterpriseDAO.InsertEnterprises (connection, new List<Enterprise>(){ e, e1});
+		e.CompleteDocuments (connection);
+		e1.CompleteDocuments (connection);
 	}
 
 	void AssetTest(MySqlConnection connection)
