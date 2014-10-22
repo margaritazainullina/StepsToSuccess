@@ -35,11 +35,10 @@ namespace Model
 		public decimal Balance { get; set; }
 		public double Stationary { get; set; }
 		public Int16? Type { get; set; }
-		
 		public Int64 Taxation_id { get; set; }
-		
+
 		public virtual Taxation Taxation { get; set; }
-		
+
 		public virtual ICollection<Asset> Assets {get; set;}
 		public virtual ICollection<Competitor> Competitors {get; set;}
 		public virtual ICollection<Employee> Employees {get; set;}
@@ -47,8 +46,8 @@ namespace Model
 		public virtual ICollection<Equipment> Equipment {get; set;}
 		public virtual ICollection<Revenue> Revenues {get; set;}
 		public virtual ICollection<Enterprise_equipment> Enterprise_equipment {get; set;}
-		
-		public Enterprise (Int64 id, string title, decimal balance, double stationary, 
+
+		public Enterprise (Int64 id, string title, decimal balance, double stationary,
 		                   Int16? type, Int64 taxation_id)
 		{
 			Id = id;
@@ -58,6 +57,7 @@ namespace Model
 			Type = type;
 			Taxation_id = taxation_id;
 		}
+
 		//5 types of enterprise creation - 
 		//private assets, investment, bank credit, private assets+investment, private assets+bank credit
 		public void CreateEnterpriseWithPrivateAssets (decimal personal, MySqlConnection connection){

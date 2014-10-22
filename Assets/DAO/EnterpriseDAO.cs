@@ -8,11 +8,11 @@ using AssemblyCSharp;
 public class EnterpriseDAO { //SINGLETONE
 	
 	//returns list with all characters from db
-	public static List<Enterprise> GetEnterprises (MySqlConnection _connection){		
+	public static void GetEnterpriseByCharacter (MySqlConnection _connection, Character character){		
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT * FROM `enterprise`";
+		command.CommandText = "SELECT * FROM `enterprise` WHERE id=" + character.Id;
 		MySqlDataReader data = command.ExecuteReader();
 		
 		List<Enterprise> enterprises = new List<Enterprise>();
@@ -27,6 +27,8 @@ public class EnterpriseDAO { //SINGLETONE
 			Int64 id = Convert.ToInt64(data["id"]);
 			Int16? type = Helper.GetValueOrNull<Int16>(Convert.ToString(data["type"]));
 			Int64 taxation_id = Convert.ToInt64(data["taxation_id"]);
+
+			Enterprise.Instance.
 
 			enterprise = new Enterprise(id, title, balance, stationary, type, taxation_id);
 			Debug.Log("Get enterprise "+title);
@@ -102,6 +104,36 @@ public class EnterpriseDAO { //SINGLETONE
 			Debug.Log ("Delete enterprise " + enterprise.Title);
 			_connection.Close ();
 		}
+	}
+
+	public static Enterprise GetEnterpriseByProject(MySqlConnection connection, Project project){	
+		try
+		{
+			connection.Open ();
+			string Query = "Select Distinct Enterprise.* FROM enterprise, team_member, employee, project " +
+				"WHERE Project.Id = Team_member.project_id AND Team_member.Employee_id = Employee.Id " +
+				"AND Enterprise.Id = Employee.Enterprise_id AND Project.Id=" + project.Id + ";";
+			MySqlCommand command = new MySqlCommand (Query, connection);
+			
+			MySqlDataReader data = command.ExecuteReader();
+			
+			
+			while (data.Read()) {
+				Int64 id = Convert.ToInt32(data ["id"]);
+				int hours_worked = Convert.ToInt32(data ["hours_worked"]);
+				double qualification = Convert.ToInt32 (data ["qualification"]);
+				Enterprise enterprise = new Enterprise(id,title,balance,stationary,type,taxation_id);
+			}
+			//MB create objects of employee to use update employeedao and set there qualification
+			
+		}catch(Exception ex) {
+			return null;
+		}
+		finally
+		{
+			connection.Close();
+		}
+		return enterprise;
 	}
 
 }

@@ -19,6 +19,13 @@ public class TestScript : MonoBehaviour {
 
 		MySqlConnection connection = new MySqlConnection(source);
 
+		Enterprise e = Enterprise.Instance;
+
+		Character character = CharacterDAO.GetCharacterByName (connection, "Rita");
+
+		Enterprise enterprise = EnterpriseDAO.GetEnterpriseByCharacter (connection, character);
+
+
 
 		//DataSet ds = new DataSet("tab1");
 				/*

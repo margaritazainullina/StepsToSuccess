@@ -56,6 +56,7 @@ namespace Model
 		public void Start(MySqlConnection connection)
 		{
 			this.State = 1;
+			this.Real_begin_date = DateTime.Now;
 			List<Project> projects = new List<Project> ();
 			projects.Add (this);
 			ProjectDAO.UpdateProjects (connection, projects);
@@ -108,44 +109,27 @@ namespace Model
 
 			//Updating prject state to finished
 			this.State = 2;
+			this.Real_end_date = DateTime.Now;
 			List<Project> projects = new List<Project> ();
 			projects.Add (this);
 			ProjectDAO.UpdateProjects (connection, projects);
 
+
 			//Updating employee qualification
-			List<Team_member> team_members;
+
 			if (quality > 1) 
 			{
-				ProjectDAO.UpdateEmployeesQualification(connection, 
-				/*
-				team_members = Team_memberDAO.GetTeam_members (connection);
-				foreach (Team_member team_member in team_members) 
-				{
-					if(team_member.Project_id != this.Id)
-					{
-						team_members.Remove(team_member);
-					}
-				}
+				ProjectDAO.UpdateEmployeesQualification(connection, this, product);
 
-				List<Employee> employees = new List<Employee>();
-				foreach (Team_member team_member in team_members) 
-				{
-					if(team_members[0].Project_id != this.Id)
-					{
-						employees.Add(EmployeeDAO.GetEmployeeById(connection, this.Id));
-					}
-				}
 
-				EmployeeDAO.UpdateEmployees(connection, employees);
-				*/
+
 			}
 
-			//WE NEED TO SET PROJECT REAL END DATE
-			//and PRODUCT QUALITY
-
+			//changing enterprise budget
+		
 
 			//delete team members
-			team_members = Team_memberDAO.GetTeam_members (connection);
+			Team_member team_members = Team_memberDAO.GetTeam_members (connection);
 			foreach (Team_member team_member in team_members) 
 			{
 				if(team_member.Project_id != this.Id)

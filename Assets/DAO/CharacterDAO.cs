@@ -9,29 +9,25 @@ using AssemblyCSharp;
 public class CharacterDAO {
 	
 	//returns list with all characters from db
-	public static List<Character> GetCharacters (MySqlConnection _connection){		
+	public static Character GetCharacterByName (MySqlConnection _connection, string name){		
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT * FROM `character`";
+		command.CommandText = "SELECT * FROM character WHERE title='" + name + "';";
 		MySqlDataReader data = command.ExecuteReader();
 		
-		List<Character> characters = new List<Character>();
-
-
-
-		//read data from dataReader and form list of Character instances
+		Character character;
+				//read data from dataReader and form list of Character instances
 		while (data.Read()){
 			string title = (string)data["title"];
 			string gender =(string)data["gender"];
 			Int64 id = Convert.ToInt64(data["id"]);
 			int level = Convert.ToInt32(data["level"]);
-			Character character = new Character(id, title, gender, level);
+			character = new Character(id, title, gender, level);
 			Debug.Log("Get character "+title);
-			characters.Add(character);
 		}
 		_connection.Close ();
-		return characters;
+		return character;
 	}
 	
 	public static void InsertCharacters (MySqlConnection _connection, List<Character> characters){		

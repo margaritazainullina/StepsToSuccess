@@ -19,7 +19,6 @@ public class RoleDAO {
 		List<Role> roles = new List<Role>();
 
 		List<Employee> employees = EmployeeDAO.GetEmployees (_connection);
-		List<Human_resources> human_resources = Human_resourcesDAO.GetHuman_resources (_connection);
 
 		//read data from dataReader and form list of Character instances
 		while (data.Read()){

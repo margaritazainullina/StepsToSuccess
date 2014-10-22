@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 18 2014 г., 19:35
+-- Время создания: Окт 22 2014 г., 18:55
 -- Версия сервера: 5.5.35-log
 -- Версия PHP: 5.3.27
 
@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `character` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id` (`id`),
   UNIQUE KEY `id_2` (`id`),
+  UNIQUE KEY `title` (`title`),
   KEY `FK_character_enterprise` (`id_enterprise`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
@@ -179,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `enterprise` (
   `stationary` double NOT NULL,
   `type` tinyint(4) DEFAULT NULL,
   `taxation_id` int(20) unsigned NOT NULL,
-  UNIQUE KEY `шв` (`id`),
+  PRIMARY KEY (`id`),
   KEY `character_id` (`taxation_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
@@ -197,23 +198,25 @@ INSERT INTO `enterprise` (`id`, `title`, `balance`, `stationary`, `type`, `taxat
 --
 
 CREATE TABLE IF NOT EXISTS `enterprise_docs` (
+  `id` int(11) NOT NULL,
   `document_id` int(20) unsigned NOT NULL,
   `availability` tinyint(1) NOT NULL,
   `is_active` tinyint(1) NOT NULL,
   `expiration_date` date NOT NULL,
   `enterprise_id` int(20) unsigned NOT NULL,
-  KEY `document_id` (`document_id`),
-  KEY `enterprise_id` (`enterprise_id`)
+  PRIMARY KEY (`id`),
+  KEY `FK_enterprise_docs_document` (`document_id`),
+  KEY `FK_enterprise_docs_enterprise` (`enterprise_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `enterprise_docs`
 --
 
-INSERT INTO `enterprise_docs` (`document_id`, `availability`, `is_active`, `expiration_date`, `enterprise_id`) VALUES
-(1, 0, 0, '0000-00-00', 1),
-(1, 1, 0, '0000-00-00', 1),
-(1, 1, 0, '0000-00-00', 1);
+INSERT INTO `enterprise_docs` (`id`, `document_id`, `availability`, `is_active`, `expiration_date`, `enterprise_id`) VALUES
+(1, 1, 0, 0, '0000-00-00', 1),
+(2, 1, 1, 0, '0000-00-00', 1),
+(3, 1, 1, 0, '0000-00-00', 1);
 
 -- --------------------------------------------------------
 
@@ -259,31 +262,6 @@ CREATE TABLE IF NOT EXISTS `equipment` (
 
 INSERT INTO `equipment` (`id`, `title`, `price`) VALUES
 (1, 0, '0');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `human_resourses`
---
-
-CREATE TABLE IF NOT EXISTS `human_resourses` (
-  `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-  `role_id` int(20) unsigned NOT NULL,
-  `hours` int(11) NOT NULL,
-  `project_id` int(20) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`),
-  KEY `role_id` (`role_id`),
-  KEY `project_id` (`project_id`),
-  KEY `project_id_2` (`project_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Дамп данных таблицы `human_resourses`
---
-
-INSERT INTO `human_resourses` (`id`, `role_id`, `hours`, `project_id`) VALUES
-(1, 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -388,30 +366,6 @@ INSERT INTO `purchase` (`id`, `equipment_id`, `quantity`, `asset_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `revenue`
---
-
-CREATE TABLE IF NOT EXISTS `revenue` (
-  `id` int(11) NOT NULL,
-  `revenue_date` date NOT NULL,
-  `value` decimal(10,0) NOT NULL,
-  `enterprise_id` int(20) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `enterprise_id` (`enterprise_id`),
-  KEY `enterprise_id_2` (`enterprise_id`),
-  KEY `enterprise_id_3` (`enterprise_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Дамп данных таблицы `revenue`
---
-
-INSERT INTO `revenue` (`id`, `revenue_date`, `value`, `enterprise_id`) VALUES
-(1, '0000-00-00', '0', 1);
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `role`
 --
 
@@ -449,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `salary_payment` (
   `employee_id` int(20) unsigned DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `employee_salary_payment` (`employee_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Дамп данных таблицы `salary_payment`
@@ -572,14 +526,15 @@ ALTER TABLE `employee`
 -- Ограничения внешнего ключа таблицы `enterprise`
 --
 ALTER TABLE `enterprise`
-  ADD CONSTRAINT `enterprise_taxation_id` FOREIGN KEY (`taxation_id`) REFERENCES `taxation` (`id`);
+  ADD CONSTRAINT `enterprise_taxation_id` FOREIGN KEY (`taxation_id`) REFERENCES `taxation` (`id`),
+  ADD CONSTRAINT `FK_enterprise_character` FOREIGN KEY (`id`) REFERENCES `character` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `enterprise_docs`
 --
 ALTER TABLE `enterprise_docs`
-  ADD CONSTRAINT `doc_enterprise_id` FOREIGN KEY (`enterprise_id`) REFERENCES `enterprise` (`id`),
-  ADD CONSTRAINT `doc_id` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`);
+  ADD CONSTRAINT `FK_enterprise_docs_document` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`),
+  ADD CONSTRAINT `FK_enterprise_docs_enterprise` FOREIGN KEY (`enterprise_id`) REFERENCES `enterprise` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `enterprise_equipment`
@@ -587,13 +542,6 @@ ALTER TABLE `enterprise_docs`
 ALTER TABLE `enterprise_equipment`
   ADD CONSTRAINT `enterprise1_id` FOREIGN KEY (`enterprise_id`) REFERENCES `enterprise` (`id`),
   ADD CONSTRAINT `equipment2_id` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`);
-
---
--- Ограничения внешнего ключа таблицы `human_resourses`
---
-ALTER TABLE `human_resourses`
-  ADD CONSTRAINT `hr_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
-  ADD CONSTRAINT `res_proj_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `product`
@@ -613,12 +561,6 @@ ALTER TABLE `project_stage`
 ALTER TABLE `purchase`
   ADD CONSTRAINT `FK_purchase_equipment` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`),
   ADD CONSTRAINT `purchase_asset_id` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`);
-
---
--- Ограничения внешнего ключа таблицы `revenue`
---
-ALTER TABLE `revenue`
-  ADD CONSTRAINT `enterprise_rev_id` FOREIGN KEY (`enterprise_id`) REFERENCES `enterprise` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `salary_payment`

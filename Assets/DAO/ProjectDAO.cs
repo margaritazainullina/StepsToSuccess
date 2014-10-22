@@ -149,40 +149,47 @@ public class ProjectDAO {
 			Debug.Log ("Progress updated " + project.Id);		
 	}
 							
-	public static void UpdateEmployeesQualification (MySqlConnection _connection, Project project){	
+	public static void UpdateEmployeesQualification (MySqlConnection connection, Project project, Product product){	
+
+		List<Employee> employees = new List<Employee>();
+		
+		Dictionary<Int64,double> employeeData = new Dictionary<int, double>();
+
 		try
 		{
-		_connection.Open ();
+		connection.Open ();
 				string Query = "SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Employee.Qualification" +
 						"FROM Project, Team_member, Employee, Salary_payment" +
 						"WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id" +
 						"AND Employee.Id=Salary_payment.Employee_id AND Project.Id=" + project.Id + 
-						" AND Salary_payment.`date`='" + project.Real_end_date + "' group by Employee.id;";
-				MySqlCommand command = new MySqlCommand (Query, _connection);
+					" AND Salary_payment.`date` BETWEEN '" + project.Real_begin_date + "' AND '" + project.Real_end_date + "' group by Employee.id;";
+				MySqlCommand command = new MySqlCommand (Query, connection);
 				
 				MySqlDataReader data = command.ExecuteReader();
-				while (data.Read()) {
+
+
+			while (data.Read()) {
+					Int64 id = Convert.ToInt32(data ["hours_worked"]);
 					int hours_worked = Convert.ToInt32(data ["hours_worked"]);
 					double qualification = Convert.ToInt32 (data ["qualification"]);
-					//MB create objects of employee to use update employeedao and set there qualification
-			}
-		}catch()
+					employeeData.Add(id, qualification + (hours_worked/((project.Real_end_date - project.Real_begin_date).TotalDays))*product.Quality);
+				}
+				//MB create objects of employee to use update employeedao and set there qualification
+
+		}catch(Exception ex) {
+				}
 		finally
 		{
-			_connection.Close();
+			connection.Close();
 		}
+		
+		foreach (KeyValuePair<Int64, double> data in employeeData) 
+		{
+			employees.Add(EmployeeDAO.GetEmployeeById(connection, data.Key));
+		}
+	
+		EmployeeDAO.UpdateEmployees(connection, employees);
+
 	} 
-	/*
-"SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Employee.Qualification" +
-"FROM Project, Team_member, Employee, Salary_payment" +
-"WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id" +
-"AND Employee.Id=Salary_payment.Employee_id AND Project.Id=" + project.Id + 
-" AND Salary_payment.`date`='" +  + "' group by Employee.id;"
-	 * 
-SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Employee.Qualification
-FROM Project, Team_member, Employee, Salary_payment
-WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id
-AND Employee.Id=Salary_payment.Employee_id AND Project.Id=1 AND 
-Salary_payment.`date`='2014-05-15' group by Employee.id;
-*/
+
 }
