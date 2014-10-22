@@ -148,19 +148,37 @@ public class ProjectDAO {
 
 			Debug.Log ("Progress updated " + project.Id);		
 	}
-	//						employees[employees.Count-1].Qualification += 
-	/*public static void DeleteCharacters (MySqlConnection _connection, List<Project> projects){		
-		foreach (Project project in projects) {
-			_connection.Open ();
-			string Query = "DELETE FROM `project` WHERE id="+project.Id+ ";";
-			MySqlCommand command = new MySqlCommand (Query, _connection);
-			
-			command.ExecuteReader ();
-			Debug.Log ("Delete project " + project.Id);
-			_connection.Close ();
+							
+	public static void UpdateEmployeesQualification (MySqlConnection _connection, Project project){	
+		try
+		{
+		_connection.Open ();
+				string Query = "SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Employee.Qualification" +
+						"FROM Project, Team_member, Employee, Salary_payment" +
+						"WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id" +
+						"AND Employee.Id=Salary_payment.Employee_id AND Project.Id=" + project.Id + 
+						" AND Salary_payment.`date`='" + project.Real_end_date + "' group by Employee.id;";
+				MySqlCommand command = new MySqlCommand (Query, _connection);
+				
+				MySqlDataReader data = command.ExecuteReader();
+				while (data.Read()) {
+					int hours_worked = Convert.ToInt32(data ["hours_worked"]);
+					double qualification = Convert.ToInt32 (data ["qualification"]);
+					//MB create objects of employee to use update employeedao and set there qualification
+			}
+		}catch()
+		finally
+		{
+			_connection.Close();
 		}
-	} */
+	} 
 	/*
+"SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Employee.Qualification" +
+"FROM Project, Team_member, Employee, Salary_payment" +
+"WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id" +
+"AND Employee.Id=Salary_payment.Employee_id AND Project.Id=" + project.Id + 
+" AND Salary_payment.`date`='" +  + "' group by Employee.id;"
+	 * 
 SELECT Employee.id, sum(Salary_payment.hours_worked) as hours_worked, Employee.Qualification
 FROM Project, Team_member, Employee, Salary_payment
 WHERE Project.Id=Team_member.Project_id AND Employee.Id=Team_member.Employee_id

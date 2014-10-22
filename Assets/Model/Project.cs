@@ -97,7 +97,7 @@ namespace Model
 
 		public void Complete(MySqlConnection connection, string product_title)
 		{
-			//id
+			//Inserting new product
 			decimal prime_cost = this.Stated_budget - this.Expenditures;
 			double quality = 1 + Convert.ToDouble(prime_cost) / Convert.ToDouble(this.Stated_budget) + 1 + 
 				(this.Real_end_date - this.Planned_end_date).TotalDays/(this.Planned_end_date-this.Planned_begin_date).TotalDays;
@@ -106,14 +106,18 @@ namespace Model
 			                              quality, prime_cost, this.Id);
 			ProductDAO.InsertProducts (connection, new List<Product> () { product });
 
+			//Updating prject state to finished
 			this.State = 2;
 			List<Project> projects = new List<Project> ();
 			projects.Add (this);
 			ProjectDAO.UpdateProjects (connection, projects);
 
+			//Updating employee qualification
 			List<Team_member> team_members;
 			if (quality > 1) 
 			{
+				ProjectDAO.UpdateEmployeesQualification(connection, 
+				/*
 				team_members = Team_memberDAO.GetTeam_members (connection);
 				foreach (Team_member team_member in team_members) 
 				{
@@ -133,9 +137,11 @@ namespace Model
 				}
 
 				EmployeeDAO.UpdateEmployees(connection, employees);
+				*/
 			}
 
-
+			//WE NEED TO SET PROJECT REAL END DATE
+			//and PRODUCT QUALITY
 
 
 			//delete team members
