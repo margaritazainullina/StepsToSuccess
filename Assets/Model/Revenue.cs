@@ -13,16 +13,18 @@ namespace Model
 {
 	public class Revenue
 	{
+		public Int64 Id { get; set; }
 		public DateTime Revenue_date { get; set; } 
 		public decimal Value { get; set; }
 
 		public Int64 Enterprise_id { get; set; }
 
-		public Revenue(DateTime revenue_date, decimal value, Int64 enterprise_id)
+		public Revenue(Int64 id, DateTime revenue_date, decimal value, Int64 enterprise_id)
 		{
 			Revenue_date = revenue_date;
 			Value = value;
 			Enterprise_id = enterprise_id;
+			Id = id;
 		}
 	}
 }

@@ -25,18 +25,48 @@ public class ServiceDAO {
 			decimal price = Convert.ToDecimal(data["price"]);
 			int period = Convert.ToInt32(data["period"]);
 			int periodsPaid = Convert.ToInt32(data["periodsPaid"]);
-			Int64 asset_id = Convert.ToInt64(data["asset_id"]);
-			Int64 action_id = Convert.ToInt64(data["action_id"]);
 			decimal effectiveness = Convert.ToDecimal(data["effectiveness"]);
-
-			Service service = null; //new Service(id, title, price, period,
-			                             // effectiveness);
+			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
+			Int64 company_id = Convert.ToInt64(data["company_id"]);
+			
+			Service service = new Service(id,title,price,period,periodsPaid,effectiveness,enterprise_id,company_id);
 			Debug.Log("Get service "+title);
 			services.Add(service);
 		}
 		_connection.Close ();
 		return services;
 	}
+
+	public static List<Service> LoadServices (MySqlConnection _connection, Enterprise enterprise){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT service.* FROM asset, service WHERE" +
+			"service.asset_id=asset.id AND asset.enterprise_id ="+ enterprise.Id +";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		List<Service> services = new List<Service>();
+		
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			string title = (string)data["title"];
+			Int64 id = Convert.ToInt64(data["id"]);
+			decimal price = Convert.ToDecimal(data["price"]);
+			int period = Convert.ToInt32(data["period"]);
+			int periodsPaid = Convert.ToInt32(data["periodsPaid"]);
+			decimal effectiveness = Convert.ToDecimal(data["effectiveness"]);
+			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
+			Int64 company_id = Convert.ToInt64(data["company_id"]);
+			
+			Service service = new Service(id,title,price,period,periodsPaid,effectiveness,enterprise_id,company_id);
+			// effectiveness);
+			Debug.Log("Get service "+title);
+			services.Add(service);
+		}
+		_connection.Close ();
+		return services;
+	}
+
 /*
 	public static Service GetServiceById (MySqlConnection _connection, Int64 id){		
 		_connection.Open ();
@@ -67,7 +97,7 @@ public class ServiceDAO {
 		foreach (Service service in services) {
 			_connection.Open ();
 			string Query = "INSERT INTO `service` values(" + service.Id + ",'" + service.Title + "'," + 
-				service.Price + "," + service.Period+ "," + service.PeriodsPaid + "," + service.Effectiveness + "," + service.Asset_id + "," + service.Company.Id + ");";
+				service.Price + "," + service.Period+ "," + service.PeriodsPaid + "," + service.Effectiveness + "," + service.Enterprise_id + "," + service.Company_id + ");";
 			
 			
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -83,8 +113,8 @@ public class ServiceDAO {
 		foreach (Service service in services) {
 			_connection.Open ();
 			string Query = "UPDATE `service` SET title='" + service.Title + "', price=" + service.Price + 
-				", period=" + service.Period + ", period=" + service.PeriodsPaid +", effectiveness=" + service.Effectiveness + ", asset_id=" + 
-					service.Asset_id + ", company_id=" + service.Company.Id  + " where id=" + service.Id + ";";
+				", period=" + service.Period + ", periods_paid=" + service.PeriodsPaid +", effectiveness=" + service.Effectiveness + ", enterprise_id=" + 
+					service.Enterprise_id + ", company_id=" + service.Company_id  + " where id=" + service.Id + ";";
 			
 			
 			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);

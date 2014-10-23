@@ -26,7 +26,7 @@ namespace Model
 		public virtual Enterprise Enterprise { get; set; }
 
 		public virtual ICollection<Salary_payment> Salary_payments {get; set;}
-		public virtual ICollection<Project> Projects {get; set;}
+		public virtual ICollection<Team_member> Team_members {get; set;}
 
 		public Employee (Int64 id, string title, double qualification, decimal salary, 
 		                 Int64 role_id, Int64 enterprise_id)

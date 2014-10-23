@@ -17,6 +17,7 @@ namespace Model
 	public class Project
 	{
 		public Int64 Id { get; set; }
+		public string Title { get; set; }
 		public DateTime Planned_begin_date { get; set; } //Let's not cut words here to 1 letter) at least start, end
 		public DateTime Planned_end_date { get; set; }
 		public DateTime Real_begin_date { get; set; }
@@ -24,16 +25,18 @@ namespace Model
 		public int State { get; set; }
 		public decimal Stated_budget { get; set; } 
 		public decimal Expenditures { get; set; }
+		public Int64 Enterprise_id { get; set; }
 		
-		public virtual ICollection<Human_resources> Human_resources {get; set;}
 		public virtual ICollection<Product> Product {get; set;}
 		public virtual ICollection<Project_stage> Project_stage {get; set;}
-		public virtual ICollection<Employee> Employees {get; set;}
+		public virtual ICollection<Enterprise> Enterprise {get; set;}
+		public virtual ICollection<Team_member> Team_members {get; set;}
 		
-		public Project (Int64 id, DateTime planned_begin_date, DateTime planned_end_date,
+		public Project (Int64 id, string title, DateTime planned_begin_date, DateTime planned_end_date,
 		                DateTime real_begin_date, DateTime real_end_date, int state, 
-		                decimal stated_budget, decimal expenditures, MySqlConnection connection)
+		                decimal stated_budget, decimal expenditures, Int64 enterprise_id)
 		{		                
+			Title = title;
 			Planned_begin_date = planned_begin_date;
 			Planned_end_date = planned_end_date;
 			Id = id;
@@ -42,14 +45,13 @@ namespace Model
 			State = state;
 			Stated_budget = stated_budget;
 			Expenditures = expenditures;
-			
-			//ProjectDAO.InsertProjects(connection, new List<Project>{this});
-		} //add to all models functions or a class?
+			Enterprise_id = enterprise_id;
+		} 
 
-		public Project (DateTime planned_begin_date, DateTime planned_end_date,
+		public Project(string title, DateTime planned_begin_date, DateTime planned_end_date,
 		                decimal stated_budget, MySqlConnection connection)
-			: this(0, planned_begin_date, planned_end_date, new DateTime(), new DateTime(), 0, 
-			       stated_budget, 0, connection)
+			: this(0, title, planned_begin_date, planned_end_date, new DateTime(), new DateTime(), 0, 
+			       stated_budget, 0.0M, 0)
 		{		                
 		}
 
@@ -95,7 +97,7 @@ namespace Model
 			ProjectDAO.UpdateProgress(connection, this, salary_payment_date);
 
 		}
-
+		/*
 		public void Complete(MySqlConnection connection, string product_title)
 		{
 			//Inserting new product
@@ -143,7 +145,7 @@ namespace Model
 
 
 		}
-
+		*/
 
 	}
 }

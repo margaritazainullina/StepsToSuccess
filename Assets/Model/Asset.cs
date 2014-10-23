@@ -20,12 +20,6 @@ namespace Model
 
 		public Int64 Enterprise_id { get; set; }
 
-		public Enterprise Enterprise { get; set; }
-
-		//1 to 1 connection, this is the main table for:
-		public virtual Purchase Purchase {get; set;}
-		public virtual Service Service {get; set;} 
-
 		public Asset (Int64 id, decimal value, DateTime asset_date, Int64 enterprise_id)
 		{
 			Id = id;

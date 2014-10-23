@@ -18,8 +18,6 @@ public class TaxationDAO {
 		
 		List<Taxation> taxations = new List<Taxation>();
 
-		List<Enterprise> enterprises = EnterpriseDAO.GetEnterprises (_connection);
-
 		//read data from dataReader and form list of Character instances
 		while (data.Read()){
 			Int64 id = Convert.ToInt64(data["id"]);

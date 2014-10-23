@@ -34,7 +34,7 @@ public class CompanyDAO {
 		_connection.Close ();
 		return companies;
 	}
-	public static Company GetCompanyById (int company_id, MySqlConnection _connection){
+	public static Company GetCompanyById (MySqlConnection _connection, Int64 company_id){
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();

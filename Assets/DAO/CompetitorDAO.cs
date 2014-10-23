@@ -32,6 +32,31 @@ public class CompetitorDAO {
 		return compatitors;
 	}
 
+
+
+	public static List<Competitor> LoadCompetitors(MySqlConnection _connection, Enterprise enterprise){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT * FROM competitor WHERE enterprise_id=" + enterprise.Id + ";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		List<Competitor> compatitors = new List<Competitor>();
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			string title = (string)data["title"];
+			double success_rate = Convert.ToDouble(data["success_rate"]);
+			Int64 id = Convert.ToInt64(data["id"]);
+			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
+			
+			Competitor compatitor = new Competitor(id, title, success_rate, enterprise_id);
+			Debug.Log("Get competitor "+title);
+			compatitors.Add(compatitor);
+		}
+		_connection.Close ();
+		return compatitors;
+	}
+
 	public static void InsertCompetitors (MySqlConnection _connection, List<Competitor> compatitors){		
 		foreach (Competitor compatitor in compatitors) {
 			_connection.Open ();

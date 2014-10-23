@@ -19,11 +19,82 @@ public class TestScript : MonoBehaviour {
 
 		MySqlConnection connection = new MySqlConnection(source);
 
-		Enterprise e = Enterprise.Instance;
+		/*****************LOADING THE GAME***********************/
 
-		Character character = CharacterDAO.GetCharacterByName (connection, "Rita");
+		Character character = CharacterDAO.LoadCharacterByName(connection, "Rita");
 
-		Enterprise enterprise = EnterpriseDAO.GetEnterpriseByCharacter (connection, character);
+		Enterprise enterprise = EnterpriseDAO.LoadEnterprise(connection, character);
+
+		List<Employee> employees = EmployeeDAO.LoadEmployees(connection, enterprise);
+		List<Competitor> competitors = CompetitorDAO.LoadCompetitors(connection, enterprise);
+		List<Enterprise_docs> enterprise_docs = Enterprise_docsDAO.LoadEnterprise_docs(connection, enterprise);
+		List<Asset> assets = AssetDAO.LoadAssets(connection, enterprise);
+		List<Enterprise_equipment> enterprise_equipment = Enterprise_equipmentDAO.LoadEnterprise_equipment(connection, enterprise);
+		List<Project> projects = ProjectDAO.LoadProjects(connection, enterprise);
+
+		List<Taxation> taxations = TaxationDAO.GetTaxations (connection);
+		List<Role> roles = RoleDAO.GetRoles(connection);
+		List<Equipment> equipment = EquipmentDAO.GetEquipment(connection);
+		List<Document> documents = DocumentDAO.GetDocuments(connection);
+		List<Company> companies = CompanyDAO.GetCompanies (connection);
+
+		List<Team_member> team_members = Team_memberDAO.LoadTeam_members(connection, enterprise);
+		List<Salary_payment> salary_payments = Salary_paymentDAO.LoadSalary_payments(connection, enterprise);
+		List<Service> services = ServiceDAO.LoadServices(connection, enterprise);
+		List<Product> product = ProductDAO.LoadProducts(connection, enterprise);
+		Project_stage project_stage = Project_stageDAO.LoadProject_stages(connection, enterprise);
+
+		enterprise.Projects = projects;
+		enterprise.Employees = employees;
+		enterprise.Enterprise_docs = enterprise_docs;
+		enterprise.Competitors = competitors;
+		enterprise.Assets = assets;
+		enterprise.Enterprise_equipment = enterprise_equipment;
+		foreach (Taxation taxation in taxations)
+		{
+			if(taxation.Id == enterprise.Taxation_id)
+			{
+				enterprise.Taxation = taxation;
+				break;
+			}
+		}
+
+		foreach (Enterprise_equipment enterprise_equip in enterprise_equipment)
+		{
+			enterprise_equip.Equipment = EquipmentDAO.GetEquipmentById(connection, enterprise_equip.Equipment_id);
+		}
+		foreach (Service service in services)
+		{
+			service.Company = CompanyDAO.GetCompanyById(connection, service.Company_id);
+		}
+		foreach (Enterprise_docs enterprise_doc in enterprise_docs)
+		{
+			enterprise_doc.Documents = DocumentDAO.GetDocumentsById(connection, enterprise_doc.Document_id);
+		}
+		foreach (Employee employee in employees)
+		{
+			employee.Role = RoleDAO.GetRolesById(connection, employee.Role_id);
+		}
+
+		foreach (Project project in projects)
+		{
+			project.Team_members = Team_memberDAO.GetTeam_membersById(connection, project);
+		}
+		foreach (Employee employee in employees)
+		{
+			employee.Team_members = Team_memberDAO.GetTeam_membersById(connection, employee);
+		}
+
+		foreach (Project project in projects)
+		{
+			project.Product = ProductDAO.GetProductsByProjectId(connection, project);
+		}
+		foreach (Project project in projects)
+		{
+			project.Project_stage = Project_stageDAO.GetProject_stagesByProjectId(connection, project);
+		}
+
+		/*****************LOADING THE GAME***********************/
 
 
 
@@ -57,13 +128,8 @@ public class TestScript : MonoBehaviour {
 		TaxationTest (connection);
 		Team_memberTest (connection);*/
 
-		Enterprise e = new Enterprise(8, "MyEnterprise", 500.23M, 2.5, 0, 1);		
-		Enterprise e1 = new Enterprise(9, "MyEnterprise", 500.23M, 2.5, 1, 1);
-		EnterpriseDAO.InsertEnterprises (connection, new List<Enterprise>(){ e, e1});
-		e.CompleteDocuments (connection);
-		e1.CompleteDocuments (connection);
 	}
-
+	/*
 	void AssetTest(MySqlConnection connection)
 	{
 		List<Asset> assets = new List<Asset>();
@@ -231,7 +297,7 @@ public class TestScript : MonoBehaviour {
 		
 		enterprise_docs2 = Enterprise_docsDAO.GetEnterprise_docs(connection);
 	}
-
+	*/
 	/*
 	void CompetitorTest(MySqlConnection connection)
 	{

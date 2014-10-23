@@ -40,6 +40,70 @@ public class Project_stageDAO {
 		return project_stages;
 	}
 
+	public static List<Project_stage> GetProject_stagesByProjectId (MySqlConnection _connection, Project project){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT * FROM project_stage WHERE project_id=" + project.Id + ";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		List<Project_stage> project_stages = new List<Project_stage>();
+		
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			int? conception_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["conception_hours"]));
+			int? programming_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["programming_hours"]));
+			int? testing_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["testing_hours"]));
+			int? design_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["design_hours"]));
+			
+			double? conception_done = Helper.GetValueOrNull<double>(Convert.ToString(data["conception_done"]));
+			double? programming_done = Helper.GetValueOrNull<double>(Convert.ToString(data["programming_done"]));
+			double? testing_done = Helper.GetValueOrNull<double>(Convert.ToString(data["testing_done"]));
+			double? design_done = Helper.GetValueOrNull<double>(Convert.ToString(data["design_done"]));
+			
+			Int64 project_id = Convert.ToInt64(data["project_id"]);
+			
+			Project_stage project_stage = new Project_stage(project_id, conception_hours, programming_hours, testing_hours, design_hours,
+			                                                conception_done, programming_done, testing_done, design_done);
+			Debug.Log("Get asset type="+project_id);
+			project_stages.Add(project_stage);
+		}
+		_connection.Close ();
+		return project_stages;
+	}
+
+	public static Project_stage LoadProject_stages (MySqlConnection _connection, Enterprise enterprise){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT project_stage.* FROM project_stage, project WHERE" +
+			"project_stage.project_id=project.id AND project.enterprise_id ="+ enterprise.Id +";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		Project_stage project_stage = null;
+		
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			int? conception_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["conception_hours"]));
+			int? programming_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["programming_hours"]));
+			int? testing_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["testing_hours"]));
+			int? design_hours = Helper.GetValueOrNull<int>(Convert.ToString(data["design_hours"]));
+			
+			double? conception_done = Helper.GetValueOrNull<double>(Convert.ToString(data["conception_done"]));
+			double? programming_done = Helper.GetValueOrNull<double>(Convert.ToString(data["programming_done"]));
+			double? testing_done = Helper.GetValueOrNull<double>(Convert.ToString(data["testing_done"]));
+			double? design_done = Helper.GetValueOrNull<double>(Convert.ToString(data["design_done"]));
+			
+			Int64 project_id = Convert.ToInt64(data["project_id"]);
+			
+			project_stage = new Project_stage(project_id, conception_hours, programming_hours, testing_hours, design_hours,
+			                                                conception_done, programming_done, testing_done, design_done);
+			Debug.Log("Get asset type="+project_id);
+		}
+		_connection.Close ();
+		return project_stage;
+	}
+
 	public static void InsertProject_stages (MySqlConnection _connection, List<Project_stage> project_stages, Int64 enterprise_id){		
 		foreach (Project_stage project_stage in project_stages) {
 			_connection.Open ();

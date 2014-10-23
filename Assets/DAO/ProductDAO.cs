@@ -34,6 +34,57 @@ public class ProductDAO {
 		return products;
 	}
 
+	public static List<Product> GetProductsByProjectId (MySqlConnection _connection, Project project){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT * FROM product WHERE project_id=" + project.Id + ";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		List<Product> products = new List<Product>();
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			string title = (string)data["title"];
+			Int64 id = Convert.ToInt64(data["id"]);
+			decimal price = Convert.ToDecimal(data["price"]);
+			double quality = Convert.ToDouble(data["quality"]);
+			decimal prime_cost = Convert.ToDecimal(data["prime_cost"]);
+			Int64 project_id = Convert.ToInt64(data["project_id"]);
+			
+			Product product = new Product(id, title, price, quality, prime_cost, project_id);
+			Debug.Log("Get product "+title);
+			products.Add(product);
+		}
+		_connection.Close ();
+		return products;
+	}
+
+	public static List<Product> LoadProducts (MySqlConnection _connection, Enterprise enterprise){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT product.* FROM product, project WHERE" +
+			"product.project_id=project.id AND project.enterprise_id ="+ enterprise.Id +";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		List<Product> products = new List<Product>();
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			string title = (string)data["title"];
+			Int64 id = Convert.ToInt64(data["id"]);
+			decimal price = Convert.ToDecimal(data["price"]);
+			double quality = Convert.ToDouble(data["quality"]);
+			decimal prime_cost = Convert.ToDecimal(data["prime_cost"]);
+			Int64 project_id = Convert.ToInt64(data["project_id"]);
+			
+			Product product = new Product(id, title, price, quality, prime_cost, project_id);
+			Debug.Log("Get product "+title);
+			products.Add(product);
+		}
+		_connection.Close ();
+		return products;
+	}
+
 	public static void InsertProducts (MySqlConnection _connection, List<Product> products){		
 		foreach (Product product in products) {
 			_connection.Open ();

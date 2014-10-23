@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 22 2014 г., 18:55
+-- Время создания: Окт 23 2014 г., 23:23
 -- Версия сервера: 5.5.35-log
 -- Версия PHP: 5.3.27
 
@@ -231,6 +231,7 @@ CREATE TABLE IF NOT EXISTS `enterprise_equipment` (
   `quantity` int(11) DEFAULT '0',
   `lease_term` int(11) unsigned zerofill DEFAULT '00000000000',
   `isRunning` tinyint(1) DEFAULT '0',
+  `title` varchar(50) DEFAULT NULL,
   KEY `enterprise1_id` (`enterprise_id`),
   KEY `equipment2_id` (`equipment_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
@@ -239,8 +240,8 @@ CREATE TABLE IF NOT EXISTS `enterprise_equipment` (
 -- Дамп данных таблицы `enterprise_equipment`
 --
 
-INSERT INTO `enterprise_equipment` (`enterprise_id`, `equipment_id`, `purchase_date`, `quantity`, `lease_term`, `isRunning`) VALUES
-(1, 1, '0000-00-00', 0, 00000000000, 0);
+INSERT INTO `enterprise_equipment` (`enterprise_id`, `equipment_id`, `purchase_date`, `quantity`, `lease_term`, `isRunning`, `title`) VALUES
+(1, 1, '0000-00-00', 0, 00000000000, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -301,18 +302,20 @@ CREATE TABLE IF NOT EXISTS `project` (
   `real_end_date` date NOT NULL,
   `state` int(11) NOT NULL,
   `stated_budget` decimal(10,0) NOT NULL,
-  `expenditures` decimal(10,0) NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `enterprise_id` int(20) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`)
+  UNIQUE KEY `id` (`id`),
+  KEY `FK_project_enterprise` (`enterprise_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Дамп данных таблицы `project`
 --
 
-INSERT INTO `project` (`id`, `planned_begin_date`, `planned_end_date`, `real_begin_date`, `real_end_date`, `state`, `stated_budget`, `expenditures`) VALUES
-(1, '2014-05-08', '2014-06-08', '2014-05-12', '2014-06-10', 0, '0', '0'),
-(2, '2014-05-08', '2014-05-08', '2014-05-08', '2014-05-08', 1, '1000', '0');
+INSERT INTO `project` (`id`, `planned_begin_date`, `planned_end_date`, `real_begin_date`, `real_end_date`, `state`, `stated_budget`, `title`, `enterprise_id`) VALUES
+(1, '2014-05-08', '2014-06-08', '2014-05-12', '2014-06-10', 0, '0', NULL, 1),
+(2, '2014-05-08', '2014-05-08', '2014-05-08', '2014-05-08', 1, '1000', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -339,29 +342,6 @@ CREATE TABLE IF NOT EXISTS `project_stage` (
 
 INSERT INTO `project_stage` (`project_id`, `conception_hours`, `programming_hours`, `testing_hours`, `design_hours`, `conception_done`, `programming_done`, `testing_done`, `design_done`) VALUES
 (1, NULL, NULL, NULL, NULL, 3, 2, 3, NULL);
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `purchase`
---
-
-CREATE TABLE IF NOT EXISTS `purchase` (
-  `id` int(20) unsigned NOT NULL,
-  `equipment_id` int(20) unsigned NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `asset_id` int(20) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `asset_id` (`asset_id`),
-  KEY `equipment_id` (`equipment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Дамп данных таблицы `purchase`
---
-
-INSERT INTO `purchase` (`id`, `equipment_id`, `quantity`, `asset_id`) VALUES
-(1, 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -429,21 +409,21 @@ CREATE TABLE IF NOT EXISTS `service` (
   `price` decimal(10,0) NOT NULL,
   `period` int(11) NOT NULL,
   `effectiveness` decimal(10,0) unsigned NOT NULL,
-  `asset_id` int(20) unsigned NOT NULL,
-  `company_id` int(20) unsigned NOT NULL,
   `periods_paid` int(20) unsigned NOT NULL,
+  `enterprise_id` int(20) unsigned NOT NULL,
+  `company_id` int(20) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `company_id` (`company_id`),
-  KEY `asset_id` (`asset_id`)
+  KEY `asset_id` (`enterprise_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Дамп данных таблицы `service`
 --
 
-INSERT INTO `service` (`id`, `title`, `price`, `period`, `effectiveness`, `asset_id`, `company_id`, `periods_paid`) VALUES
-(1, '', '0', 0, '0', 1, 1, 0);
+INSERT INTO `service` (`id`, `title`, `price`, `period`, `effectiveness`, `periods_paid`, `enterprise_id`, `company_id`) VALUES
+(1, '', '0', 0, '0', 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -550,17 +530,16 @@ ALTER TABLE `product`
   ADD CONSTRAINT `product_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`);
 
 --
+-- Ограничения внешнего ключа таблицы `project`
+--
+ALTER TABLE `project`
+  ADD CONSTRAINT `FK_project_enterprise` FOREIGN KEY (`enterprise_id`) REFERENCES `enterprise` (`id`);
+
+--
 -- Ограничения внешнего ключа таблицы `project_stage`
 --
 ALTER TABLE `project_stage`
   ADD CONSTRAINT `project_stages` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`);
-
---
--- Ограничения внешнего ключа таблицы `purchase`
---
-ALTER TABLE `purchase`
-  ADD CONSTRAINT `FK_purchase_equipment` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`),
-  ADD CONSTRAINT `purchase_asset_id` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `salary_payment`
@@ -572,7 +551,7 @@ ALTER TABLE `salary_payment`
 -- Ограничения внешнего ключа таблицы `service`
 --
 ALTER TABLE `service`
-  ADD CONSTRAINT `service_asset_id` FOREIGN KEY (`asset_id`) REFERENCES `asset` (`id`),
+  ADD CONSTRAINT `FK_service_enterprise` FOREIGN KEY (`enterprise_id`) REFERENCES `enterprise` (`id`),
   ADD CONSTRAINT `service_company_id` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 
 --

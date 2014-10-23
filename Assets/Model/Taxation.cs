@@ -22,8 +22,6 @@ namespace Model
 		public double VAT { get; set; }
 		public double Income_duty { get; set; }
 
-		public virtual ICollection<Enterprise> Enterprises {get; set;}
-
 		public Taxation(Int64 id, int taxation_group, decimal max_revenue, 
 		                int max_employee, double VAT, double income_duty)
 		{

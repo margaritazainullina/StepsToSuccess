@@ -8,7 +8,7 @@ using AssemblyCSharp;
 public class EnterpriseDAO { //SINGLETONE
 	
 	//returns list with all characters from db
-	public static void GetEnterpriseByCharacter (MySqlConnection _connection, Character character){		
+	public static Enterprise LoadEnterprise(MySqlConnection _connection, Character character){		
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
@@ -17,7 +17,7 @@ public class EnterpriseDAO { //SINGLETONE
 		
 		List<Enterprise> enterprises = new List<Enterprise>();
 
-		Enterprise enterprise;
+		Enterprise enterprise = null;
 
 		//read data from dataReader and form list of Character instances
 		while (data.Read()){
@@ -28,15 +28,13 @@ public class EnterpriseDAO { //SINGLETONE
 			Int16? type = Helper.GetValueOrNull<Int16>(Convert.ToString(data["type"]));
 			Int64 taxation_id = Convert.ToInt64(data["taxation_id"]);
 
-			Enterprise.Instance.
-
 			enterprise = new Enterprise(id, title, balance, stationary, type, taxation_id);
 			Debug.Log("Get enterprise "+title);
 			enterprises.Add(enterprise);
 		}
 
 		_connection.Close ();
-		return enterprises;
+		return enterprise;
 	}
 
 	//returns list with all characters from db
@@ -107,6 +105,8 @@ public class EnterpriseDAO { //SINGLETONE
 	}
 
 	public static Enterprise GetEnterpriseByProject(MySqlConnection connection, Project project){	
+		Enterprise enterprise = null;
+
 		try
 		{
 			connection.Open ();
@@ -117,12 +117,17 @@ public class EnterpriseDAO { //SINGLETONE
 			
 			MySqlDataReader data = command.ExecuteReader();
 			
-			
 			while (data.Read()) {
 				Int64 id = Convert.ToInt32(data ["id"]);
 				int hours_worked = Convert.ToInt32(data ["hours_worked"]);
 				double qualification = Convert.ToInt32 (data ["qualification"]);
-				Enterprise enterprise = new Enterprise(id,title,balance,stationary,type,taxation_id);
+				string title = Convert.ToString(data["title"]);
+				decimal balance = Convert.ToDecimal(data["balance"]);
+				double stationary =Convert.ToDouble(data["stationary"]);
+				Int16? type = Helper.GetValueOrNull<Int16>(Convert.ToString(data["type"]));
+				Int64 taxation_id = Convert.ToInt64(data["taxation_id"]);
+
+				enterprise = new Enterprise(id,title,balance,stationary,type,taxation_id);
 			}
 			//MB create objects of employee to use update employeedao and set there qualification
 			

@@ -18,8 +18,6 @@ public class RoleDAO {
 		
 		List<Role> roles = new List<Role>();
 
-		List<Employee> employees = EmployeeDAO.GetEmployees (_connection);
-
 		//read data from dataReader and form list of Character instances
 		while (data.Read()){
 			string title = (string)data["title"];
@@ -33,6 +31,29 @@ public class RoleDAO {
 		}
 		_connection.Close ();
 		return roles;
+	}
+
+	public static Role GetRolesById (MySqlConnection _connection, Int64 id){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT * FROM role WHERE id=" + id + ";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		Role role = null;
+		
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			string title = (string)data["title"];
+			id = Convert.ToInt64(data["id"]);
+			decimal min_salary = Convert.ToDecimal(data["min_salary"]);
+			decimal max_salary = Convert.ToDecimal(data["max_salary"]);
+			
+			role = new Role(id, title, min_salary, max_salary);
+			Debug.Log("Get role " + title);
+		}
+		_connection.Close ();
+		return role;
 	}
 	
 	public static void InsertRoles (MySqlConnection _connection, List<Role> roles){		

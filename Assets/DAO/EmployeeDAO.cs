@@ -35,6 +35,32 @@ public class EmployeeDAO {
 		return employees;
 	}
 
+	public static List<Employee> LoadEmployees (MySqlConnection _connection, Enterprise enterprise){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT * FROM employee WHERE enterprise_id=" + enterprise.Id + ";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		List<Employee> employees = new List<Employee>();
+		
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			string title = (string)data["title"];
+			double qualification =Convert.ToInt32(data["qualification"]);
+			Int64 id = Convert.ToInt64(data["id"]);
+			decimal salary = Convert.ToDecimal(data["salary"]);
+			Int64 role_id = Convert.ToInt64(data["role_id"]);
+			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
+			
+			Employee employee = new Employee(id, title, qualification, salary, role_id, enterprise_id);
+			Debug.Log("Get employee "+title);
+			employees.Add(employee);
+		}
+		_connection.Close ();
+		return employees;
+	}
+
 	public static void InsertEmployees (MySqlConnection _connection, List<Employee> employees){		
 		foreach (Employee employee in employees) {
 			_connection.Open ();

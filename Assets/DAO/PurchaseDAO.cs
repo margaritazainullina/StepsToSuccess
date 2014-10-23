@@ -37,6 +37,35 @@ public class PurchaseDAO {
 		return purchases;
 	}
 
+	public static List<Purchase> LoadPurchases (MySqlConnection _connection, Enterprise enterprise)
+	{		
+		List<Purchase> purchases = new List<Purchase>();
+		
+		_connection.Open();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT Purchase.* FROM asset, Purchase WHERE" +
+			"Purchase.asset_id=asset.id AND asset.enterprise_id ="+ enterprise.Id +";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			int quantity = Convert.ToInt32(data["quantity"]);
+			Int64 id = Convert.ToInt64(data["id"]);
+			
+			//Equipment equip = (equipment == null) ? EquipmentDAO.GetEquipment(_connection) : equipment[id];
+			//Asset asset = (assets == null) ? AssetDAO.GetAssets(_connection) : assets[id];
+			//Equipment equip = EquipmentDAO.GetEquipment(_connection);
+			//Asset asset = AssetDAO.GetAssets(_connection);
+			
+			//Purchase purchase = new Purchase(id, quantity);
+			Debug.Log("Get character "+id);
+			//purchases.Add(purchase);
+		}
+		_connection.Close ();
+		return purchases;
+	}
+
 	/*
 	public static List<Purchase> GetRelatedPurchases (MySqlConnection _connection, Asset asset, Equipment equip)
 	{		

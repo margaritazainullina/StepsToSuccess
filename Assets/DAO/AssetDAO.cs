@@ -44,6 +44,42 @@ public class AssetDAO {
 		return assets;
 	}
 
+	public static List<Asset> LoadAssets(MySqlConnection _connection, Enterprise enterprise){		
+		
+		List<Asset> assets = new List<Asset>();	
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT * FROM asset WHERE enterprise_id=" + enterprise.Id + ";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		Asset asset = null;
+		
+		try
+		{
+			//read data from dataReader and form list of Character instances
+			while (data.Read()){
+				
+				int value = Convert.ToInt32(data["value"]);
+				Int64 id = Convert.ToInt64(data["id"]);
+				DateTime asset_date = Convert.ToDateTime(data["asset_date"]);
+				Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
+				
+				asset = new Asset(id, value,asset_date, enterprise_id);
+				
+				Debug.Log("Get asset id="+id+" and value="+value);
+				assets.Add(asset);
+			}
+		}catch (Exception ex) { Debug.Log("Getting data exception:" + ex.Message); }
+		finally 
+		{
+			_connection.Close ();
+		}
+		_connection.Close();
+		
+		return assets;
+	}
+
 	//What if there's no element for id
 	public static void InsertAssets (MySqlConnection _connection, List<Asset> assets){		//12 ()
 		foreach (Asset asset in assets) {

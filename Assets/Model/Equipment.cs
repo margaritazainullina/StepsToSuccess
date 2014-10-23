@@ -19,7 +19,6 @@ namespace Model
 		public decimal Price { get; set; }
 
 		public virtual ICollection<Enterprise_equipment> Enterprise_equipments {get; set;}
-		public virtual ICollection<Purchase> Purchases {get; set;}
 
 		public Equipment (Int64 id, double title, decimal price)
 		{

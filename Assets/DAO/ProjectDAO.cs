@@ -19,6 +19,7 @@ public class ProjectDAO {
 		//read data from dataReader and form list of Character instances
 		while (data.Read()){
 			Int64 id = Convert.ToInt64(data["id"]);
+			string title = Convert.ToString(data["title"]);
 			DateTime planned_begin_date = Convert.ToDateTime(data["planned_begin_date"]);
 			DateTime planned_end_date = Convert.ToDateTime(data["planned_end_date"]);
 			DateTime real_begin_date = Convert.ToDateTime(data["real_begin_date"]);
@@ -26,9 +27,40 @@ public class ProjectDAO {
 			int state = Convert.ToInt32(data["state"]);
 			decimal stated_budget = Convert.ToDecimal(data["stated_budget"]);
 			decimal expenditures = Convert.ToDecimal(data["expenditures"]);
+			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			
-			Project project = new Project(id, planned_begin_date, planned_end_date, real_begin_date, real_end_date, 
-			                              state, stated_budget, expenditures, _connection);
+			Project project = new Project(id, title, planned_begin_date, planned_end_date, real_begin_date, real_end_date, 
+			                              state, stated_budget, expenditures, enterprise_id);
+			Debug.Log("Get character "+ id);
+			projects.Add(project);
+		}
+		_connection.Close ();
+		return projects;
+	}
+
+	public static List<Project> LoadProjects (MySqlConnection _connection, Enterprise enterprise){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT * FROM project WHERE enterprise_id=" + enterprise.Id + ";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		List<Project> projects = new List<Project>();
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			Int64 id = Convert.ToInt64(data["id"]);
+			String title = Convert.ToString(data["title"]);
+			DateTime planned_begin_date = Convert.ToDateTime(data["planned_begin_date"]);
+			DateTime planned_end_date = Convert.ToDateTime(data["planned_end_date"]);
+			DateTime real_begin_date = Convert.ToDateTime(data["real_begin_date"]);
+			DateTime real_end_date = Convert.ToDateTime(data["real_end_date"]);
+			int state = Convert.ToInt32(data["state"]);
+			decimal stated_budget = Convert.ToDecimal(data["stated_budget"]);
+			decimal expenditures = Convert.ToDecimal(data["expenditures"]);
+			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
+			
+			Project project = new Project(id,title, planned_begin_date, planned_end_date, real_begin_date, real_end_date, 
+			                              state, stated_budget, expenditures, enterprise_id);
 			Debug.Log("Get character "+ id);
 			projects.Add(project);
 		}
@@ -153,7 +185,7 @@ public class ProjectDAO {
 
 		List<Employee> employees = new List<Employee>();
 		
-		Dictionary<Int64,double> employeeData = new Dictionary<int, double>();
+		Dictionary<Int64,double> employeeData = new Dictionary<Int64, double>();
 
 		try
 		{

@@ -32,7 +32,31 @@ public class DocumentDAO {
 		_connection.Close ();
 		return documents;
 	}
-	
+
+	public static List<Document> GetDocumentsById (MySqlConnection _connection, Int64 id){		
+		_connection.Open ();
+		//retrieve from db
+		MySqlCommand command = _connection.CreateCommand();
+		command.CommandText = "SELECT * FROM `document` WHERE id="+ id +";";
+		MySqlDataReader data = command.ExecuteReader();
+		
+		List<Document> documents = new List<Document>();
+		
+		//read data from dataReader and form list of Character instances
+		while (data.Read()){
+			string title = (string)data["title"];
+			string type =(string)data["type"];
+			id = Convert.ToInt64(data["id"]);
+			int path = Convert.ToInt32(data["path"]);
+			
+			Document document = new Document(id, title, type, path);
+			Debug.Log("Get character "+title);
+			documents.Add(document);
+		}
+		_connection.Close ();
+		return documents;
+	}
+
 	public static void InsertDocuments (MySqlConnection _connection, List<Document> documents){		
 		foreach (Document document in documents) {
 			_connection.Open ();

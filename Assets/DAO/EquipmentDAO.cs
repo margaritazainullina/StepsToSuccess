@@ -31,29 +31,28 @@ public class EquipmentDAO {
 		_connection.Close();
 		return equipment;
 	}
-	/*
-	public static Equipment GetEquipmentById (MySqlConnection _connection, Int64 id, Asset asset, List<Equipment> equipment)
+
+	public static Equipment GetEquipmentById (MySqlConnection _connection, Int64 id)
 	{		
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT * FROM `purchase` WHERE id=" + id;
+		command.CommandText = "SELECT DISTINCT * FROM equipment WHERE id=" + id;
 		MySqlDataReader data = command.ExecuteReader();
-		
-		Purchase purchase = null;
-		
-		//asset = (asset == null) ? EquipmentDAO.GetEquipmentById(_connection) : asset;
-		equipment = (equipment == null) ? EquipmentDAO.GetEquipment(_connection) : equipment[id];
-		//read data from dataReader and form list of Character instances
+
+		Equipment equip = null;
+
 		while (data.Read()){
-			int quantity = Convert.ToInt32(data["quantity"]);
+			id = Convert.ToInt32(data["id"]);
+			Int64 title = Convert.ToInt32(data["title"]);
+			Int64 price = Convert.ToInt32(data["price"]);
 			
-			purchase = new Purchase(id, quantity, equipment, asset);
+			equip = new Equipment(id, title, price);
 			Debug.Log("Get character "+id);
 		}
 		_connection.Close ();
-		return purchase;
-	}*/
+		return equip;
+	}
 
 
 	public static void InsertEquipment (MySqlConnection _connection, List<Equipment> equipment){		

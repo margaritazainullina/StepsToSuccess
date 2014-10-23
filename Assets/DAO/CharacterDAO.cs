@@ -9,14 +9,14 @@ using AssemblyCSharp;
 public class CharacterDAO {
 	
 	//returns list with all characters from db
-	public static Character GetCharacterByName (MySqlConnection _connection, string name){		
+	public static Character LoadCharacterByName (MySqlConnection _connection, string name){		
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
 		command.CommandText = "SELECT * FROM character WHERE title='" + name + "';";
 		MySqlDataReader data = command.ExecuteReader();
 		
-		Character character;
+		Character character = null;
 				//read data from dataReader and form list of Character instances
 		while (data.Read()){
 			string title = (string)data["title"];

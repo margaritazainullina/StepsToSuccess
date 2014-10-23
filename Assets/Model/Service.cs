@@ -25,19 +25,20 @@ namespace Model
 		public int PeriodsPaid { get; set; }
 		public decimal Effectiveness { get; set; }
 
-		public Int64 Asset_id { get; set; }
-		public Company Company { get; set; }
+		public Int64 Enterprise_id { get; set; }
+		public Int64 Company_id { get; set; }
+
+		public Company Company  { get; set; }
 
 		public Service(Int64 id, string title, decimal price, int period,int periodsPaid, 
-		               decimal effectiveness, Int64 asset_id, Int64 company_id, MySqlConnection _connection)
+		               decimal effectiveness, Int64 enterprise_id, Int64 company_id)
 		{
 			Id = id;
 			Title = title;
 			Price = price;
 			Period = period;
 			PeriodsPaid = periodsPaid;
-			Asset_id = asset_id;
-			Company = CompanyDAO.GetCompanyById ((int)company_id, _connection);
+			Enterprise_id = enterprise_id;
 			Effectiveness = effectiveness;
 		}
 	}

@@ -46,6 +46,7 @@ namespace Model
 		public virtual ICollection<Equipment> Equipment {get; set;}
 		public virtual ICollection<Revenue> Revenues {get; set;}
 		public virtual ICollection<Enterprise_equipment> Enterprise_equipment {get; set;}
+		public virtual ICollection<Project> Projects {get; set;}
 
 		public Enterprise (Int64 id, string title, decimal balance, double stationary,
 		                   Int16? type, Int64 taxation_id)
@@ -253,7 +254,7 @@ namespace Model
 								Balance -= amountOfSalaryPaidToday * (decimal)0.376;			
 						}
 				}
-
+		/*
 		public void LoanDisbursement(MySqlConnection connection, MySqlConnection _connection){
 			//budget -= (investment*share)/period
 			foreach (Asset a in Assets) {
@@ -272,5 +273,6 @@ namespace Model
 				Balance -= income*(decimal)a.Service.Company.Share;
 			}
 		}
+		*/
 	}
 }
