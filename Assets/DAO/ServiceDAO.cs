@@ -41,8 +41,7 @@ public class ServiceDAO {
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT service.* FROM asset, service WHERE" +
-			"service.asset_id=asset.id AND asset.enterprise_id ="+ enterprise.Id +";";
+		command.CommandText = "SELECT * FROM service WHERE enterprise_id=" + enterprise.Id + ";";
 		MySqlDataReader data = command.ExecuteReader();
 		
 		List<Service> services = new List<Service>();
@@ -53,7 +52,7 @@ public class ServiceDAO {
 			Int64 id = Convert.ToInt64(data["id"]);
 			decimal price = Convert.ToDecimal(data["price"]);
 			int period = Convert.ToInt32(data["period"]);
-			int periodsPaid = Convert.ToInt32(data["periodsPaid"]);
+			int periodsPaid = Convert.ToInt32(data["periods_paid"]);
 			decimal effectiveness = Convert.ToDecimal(data["effectiveness"]);
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			Int64 company_id = Convert.ToInt64(data["company_id"]);

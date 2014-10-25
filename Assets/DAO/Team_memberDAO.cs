@@ -117,7 +117,7 @@ public class Team_memberDAO {
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT Team_member.* FROM employee, team_member WHERE" +
+		command.CommandText = "SELECT Team_member.* FROM employee, team_member WHERE " +
 		"team_member.employee_id=employee.id AND employee.enterprise_id ="+ enterprise.Id +";";
 		MySqlDataReader data = command.ExecuteReader();
 		

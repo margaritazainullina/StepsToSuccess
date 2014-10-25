@@ -13,7 +13,7 @@ public class CharacterDAO {
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT * FROM character WHERE title='" + name + "';";
+		command.CommandText = "SELECT * FROM `character` WHERE title='" + name + "';";
 		MySqlDataReader data = command.ExecuteReader();
 		
 		Character character = null;

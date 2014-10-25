@@ -31,6 +31,7 @@ public class TestScript : MonoBehaviour {
 		List<Asset> assets = AssetDAO.LoadAssets(connection, enterprise);
 		List<Enterprise_equipment> enterprise_equipment = Enterprise_equipmentDAO.LoadEnterprise_equipment(connection, enterprise);
 		List<Project> projects = ProjectDAO.LoadProjects(connection, enterprise);
+		List<Service> services = ServiceDAO.LoadServices(connection, enterprise);
 
 		List<Taxation> taxations = TaxationDAO.GetTaxations (connection);
 		List<Role> roles = RoleDAO.GetRoles(connection);
@@ -40,7 +41,6 @@ public class TestScript : MonoBehaviour {
 
 		List<Team_member> team_members = Team_memberDAO.LoadTeam_members(connection, enterprise);
 		List<Salary_payment> salary_payments = Salary_paymentDAO.LoadSalary_payments(connection, enterprise);
-		List<Service> services = ServiceDAO.LoadServices(connection, enterprise);
 		List<Product> product = ProductDAO.LoadProducts(connection, enterprise);
 		Project_stage project_stage = Project_stageDAO.LoadProject_stages(connection, enterprise);
 
@@ -49,7 +49,7 @@ public class TestScript : MonoBehaviour {
 		enterprise.Enterprise_docs = enterprise_docs;
 		enterprise.Competitors = competitors;
 		enterprise.Assets = assets;
-		enterprise.Enterprise_equipment = enterprise_equipment;
+ 		enterprise.Enterprise_equipment = enterprise_equipment;
 		foreach (Taxation taxation in taxations)
 		{
 			if(taxation.Id == enterprise.Taxation_id)
@@ -93,6 +93,8 @@ public class TestScript : MonoBehaviour {
 		{
 			project.Project_stage = Project_stageDAO.GetProject_stagesByProjectId(connection, project);
 		}
+
+		//enterprise.Employees[0].Role;
 
 		/*****************LOADING THE GAME***********************/
 

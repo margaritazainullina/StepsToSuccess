@@ -24,7 +24,6 @@ namespace Model
 		public DateTime Real_end_date { get; set; }
 		public int State { get; set; }
 		public decimal Stated_budget { get; set; } 
-		public decimal Expenditures { get; set; }
 		public Int64 Enterprise_id { get; set; }
 		
 		public virtual ICollection<Product> Product {get; set;}
@@ -34,7 +33,7 @@ namespace Model
 		
 		public Project (Int64 id, string title, DateTime planned_begin_date, DateTime planned_end_date,
 		                DateTime real_begin_date, DateTime real_end_date, int state, 
-		                decimal stated_budget, decimal expenditures, Int64 enterprise_id)
+		                decimal stated_budget, Int64 enterprise_id)
 		{		                
 			Title = title;
 			Planned_begin_date = planned_begin_date;
@@ -44,14 +43,14 @@ namespace Model
 			Real_end_date = real_end_date;
 			State = state;
 			Stated_budget = stated_budget;
-			Expenditures = expenditures;
+
 			Enterprise_id = enterprise_id;
 		} 
 
 		public Project(string title, DateTime planned_begin_date, DateTime planned_end_date,
 		                decimal stated_budget, MySqlConnection connection)
 			: this(0, title, planned_begin_date, planned_end_date, new DateTime(), new DateTime(), 0, 
-			       stated_budget, 0.0M, 0)
+			       stated_budget, 0)
 		{		                
 		}
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 23 2014 г., 23:23
+-- Время создания: Окт 25 2014 г., 20:20
 -- Версия сервера: 5.5.35-log
 -- Версия PHP: 5.3.27
 
@@ -214,9 +214,9 @@ CREATE TABLE IF NOT EXISTS `enterprise_docs` (
 --
 
 INSERT INTO `enterprise_docs` (`id`, `document_id`, `availability`, `is_active`, `expiration_date`, `enterprise_id`) VALUES
-(1, 1, 0, 0, '0000-00-00', 1),
-(2, 1, 1, 0, '0000-00-00', 1),
-(3, 1, 1, 0, '0000-00-00', 1);
+(1, 1, 0, 0, '2014-10-24', 1),
+(2, 1, 1, 0, '2014-10-24', 1),
+(3, 1, 1, 0, '2014-10-24', 1);
 
 -- --------------------------------------------------------
 
@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `enterprise_equipment` (
 --
 
 INSERT INTO `enterprise_equipment` (`enterprise_id`, `equipment_id`, `purchase_date`, `quantity`, `lease_term`, `isRunning`, `title`) VALUES
-(1, 1, '0000-00-00', 0, 00000000000, 0, NULL);
+(1, 1, '2014-10-24', 0, 00000000000, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -296,13 +296,13 @@ INSERT INTO `product` (`id`, `title`, `price`, `quality`, `prime_cost`, `project
 
 CREATE TABLE IF NOT EXISTS `project` (
   `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) DEFAULT NULL,
   `planned_begin_date` date NOT NULL,
   `planned_end_date` date NOT NULL,
   `real_begin_date` date NOT NULL,
   `real_end_date` date NOT NULL,
   `state` int(11) NOT NULL,
   `stated_budget` decimal(10,0) NOT NULL,
-  `title` varchar(50) DEFAULT NULL,
   `enterprise_id` int(20) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
@@ -313,9 +313,9 @@ CREATE TABLE IF NOT EXISTS `project` (
 -- Дамп данных таблицы `project`
 --
 
-INSERT INTO `project` (`id`, `planned_begin_date`, `planned_end_date`, `real_begin_date`, `real_end_date`, `state`, `stated_budget`, `title`, `enterprise_id`) VALUES
-(1, '2014-05-08', '2014-06-08', '2014-05-12', '2014-06-10', 0, '0', NULL, 1),
-(2, '2014-05-08', '2014-05-08', '2014-05-08', '2014-05-08', 1, '1000', NULL, 1);
+INSERT INTO `project` (`id`, `title`, `planned_begin_date`, `planned_end_date`, `real_begin_date`, `real_end_date`, `state`, `stated_budget`, `enterprise_id`) VALUES
+(1, NULL, '2014-05-08', '2014-06-08', '2014-05-12', '2014-06-10', 0, '0', 1),
+(2, NULL, '2014-05-08', '2014-05-08', '2014-05-08', '2014-05-08', 1, '1000', 1);
 
 -- --------------------------------------------------------
 

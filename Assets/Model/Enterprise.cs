@@ -41,7 +41,7 @@ namespace Model
 
 		public virtual ICollection<Asset> Assets {get; set;}
 		public virtual ICollection<Competitor> Competitors {get; set;}
-		public virtual ICollection<Employee> Employees {get; set;}
+		public virtual List<Employee> Employees {get; set;}
 		public virtual ICollection<Enterprise_docs> Enterprise_docs {get; set;}
 		public virtual ICollection<Equipment> Equipment {get; set;}
 		public virtual ICollection<Revenue> Revenues {get; set;}
@@ -214,7 +214,7 @@ namespace Model
 			}
 			Debug.Log("Enterprise.CompleteDocuments(): "+document);
 			return document;}		
-
+		/*
 		public void PaySalary(MySqlConnection connection, Employee employee, int hours_worked, DateTime date)
 		{
 			Salary_payment salary_payment = new Salary_payment (0, DateTime.Now, hours_worked, 
@@ -244,7 +244,7 @@ namespace Model
 			}
 			ProjectDAO.UpdateProjects (connection, projects);
 		}
-		
+		*/
 		public void PayUST(MySqlConnection connection, decimal amountOfSalaryPaidToday){
 						//Balance -= ∑(Salary_payment. Salary)*0,036-зарплата_предпринимателю*0,347(???)
 						if (Type == 0) {

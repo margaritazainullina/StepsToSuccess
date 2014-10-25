@@ -19,6 +19,11 @@ namespace AssemblyCSharp
 		{
 			if (string.IsNullOrEmpty(valueAsString))
 			return null;
+			if(typeof(T) == typeof(bool))
+			{
+				bool? b = valueAsString.Equals("0")? false : true;
+				return b as T?;
+			}
 			return (T) Convert.ChangeType(valueAsString, typeof(T));
 		}
 

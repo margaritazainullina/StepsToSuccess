@@ -63,7 +63,7 @@ public class ProductDAO {
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT product.* FROM product, project WHERE" +
+		command.CommandText = "SELECT product.* FROM product, project WHERE " +
 			"product.project_id=project.id AND project.enterprise_id ="+ enterprise.Id +";";
 		MySqlDataReader data = command.ExecuteReader();
 		

@@ -37,7 +37,7 @@ public class Salary_paymentDAO {
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT Salary_payment.* FROM employee, team_member WHERE" +
+		command.CommandText = "SELECT salary_payment.* FROM employee, team_member, salary_payment WHERE " +
 			"Salary_payment.employee_id=employee.id AND employee.enterprise_id ="+ enterprise.Id +";";
 		MySqlDataReader data = command.ExecuteReader();
 		

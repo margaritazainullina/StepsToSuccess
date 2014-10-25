@@ -76,7 +76,7 @@ public class Project_stageDAO {
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT project_stage.* FROM project_stage, project WHERE" +
+		command.CommandText = "SELECT project_stage.* FROM project_stage, project WHERE " +
 			"project_stage.project_id=project.id AND project.enterprise_id ="+ enterprise.Id +";";
 		MySqlDataReader data = command.ExecuteReader();
 		
