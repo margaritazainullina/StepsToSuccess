@@ -1,0 +1,12 @@
+{
+	"publisher_id": 0,
+	"publisher_package_id": 3366,
+	"title": "Elven 1. Model pack",
+	"description": "This pack contains 4 detailed elven houses and some decoration objects to create an  elven village. Each house can be rendered with 4 different materials to create some variations. Also each house comes with 2 LOD stages.\n\nTextures come with additional specularity, normal map and 2048x2048 pixel resolution. ",
+	"changes": "- some diffuse textures did not have spec in alpha\n- vertex normals have be re-calculated to provide better shading\n- import scale has been changed to match better to our other packs\n- spec textures have been deleted since they are in alpha now\n- spec color and multiplier has been changed\n- diffuse color has been changed\n- readme.txt and package description has been changed\n- additional materials have been created (fantasya3, a4 and so on), \n  so a user can drag them to a house and have variation",
+	"version_name": "1.1",
+	"category": 25,
+	"price": "20",
+	"recommended_features": [],
+	"required_features": []
+}

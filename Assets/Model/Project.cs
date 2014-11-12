@@ -114,9 +114,8 @@ namespace Model
 
 			//Updating employee qualification
 			List<Team_member> team_members;
-			if (quality > 1) 
-			{
-				ProjectDAO.UpdateEmployeesQualification(connection, 
+			if (quality > 1) {
+								/*ProjectDAO.UpdateEmployeesQualification(connection, 
 				/*
 				team_members = Team_memberDAO.GetTeam_members (connection);
 				foreach (Team_member team_member in team_members) 
@@ -137,7 +136,7 @@ namespace Model
 				}
 
 				EmployeeDAO.UpdateEmployees(connection, employees);
-				*/
+
 			}
 
 			//WE NEED TO SET PROJECT REAL END DATE
@@ -156,8 +155,8 @@ namespace Model
 
 			Team_memberDAO.DeleteTeam_members (connection, team_members);
 
-
-
+*/
+						}
 		}
 
 

@@ -149,7 +149,7 @@ public class ProjectDAO {
 			Debug.Log ("Progress updated " + project.Id);		
 	}
 							
-	public static void UpdateEmployeesQualification (MySqlConnection _connection, Project project){	
+/*	public static void UpdateEmployeesQualification (MySqlConnection _connection, Project project){	
 		try
 		{
 		_connection.Open ();
