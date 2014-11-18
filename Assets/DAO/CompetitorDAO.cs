@@ -24,7 +24,7 @@ public class CompetitorDAO {
 			Int64 id = Convert.ToInt64(data["id"]);
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 
-			Competitor compatitor = new Competitor(id, title, success_rate, enterprise_id);
+			Competitor compatitor = new Competitor(id, title, success_rate, enterprise_id, false);
 			Debug.Log("Get competitor "+title);
 			compatitors.Add(compatitor);
 		}
@@ -49,7 +49,7 @@ public class CompetitorDAO {
 			Int64 id = Convert.ToInt64(data["id"]);
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			
-			Competitor compatitor = new Competitor(id, title, success_rate, enterprise_id);
+			Competitor compatitor = new Competitor(id, title, success_rate, enterprise_id, false);
 			Debug.Log("Get competitor "+title);
 			compatitors.Add(compatitor);
 		}
@@ -60,7 +60,7 @@ public class CompetitorDAO {
 	public static void InsertCompetitors (MySqlConnection _connection, List<Competitor> compatitors){		
 		foreach (Competitor compatitor in compatitors) {
 			_connection.Open ();
-			string Query = "INSERT INTO `competitor` values(" + compatitor.Id + ",'" + compatitor.Title + "'," + 
+			string Query = "INSERT INTO competitor(title,success_rate,enterprise_id) values('" + compatitor.Title + "'," + 
 				compatitor.Success_rate + "," + compatitor.Enterprise_id + ");";
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
@@ -70,8 +70,9 @@ public class CompetitorDAO {
 			_connection.Close ();
 		}
 	}
-	public static void UpdateCompetitors (MySqlConnection _connection, List<Competitor> compatitors){		
-		foreach (Competitor compatitor in compatitors) {
+	public static void UpdateCompetitors (MySqlConnection _connection){		
+		foreach (Competitor compatitor in Character.Instance.Enterprise.Competitors) {
+			if(compatitor.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `competitor` SET title='" + compatitor.Title + "', success_rate=" + compatitor.Success_rate +
 				", enterprise_id=" + compatitor.Enterprise_id  + " where id=" + compatitor.Id + ";";

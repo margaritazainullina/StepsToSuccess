@@ -21,24 +21,26 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Salary_payment
 	{
 		public Int64 Id { get; set; }
-
 		public DateTime Date { get; set; }
 		public int? Hours_worked { get; set; }
 		public decimal? Salary { get; set; }
+		public bool isNew { get; private set; }
 
 		public Int64 Employee_id { get; set; }
 
 		public Salary_payment(Int64 id, DateTime date, int? hours_worked, decimal? salary,
-		                      Int64 employee_id)
+		                      Int64 employee_id, bool isNew)
 		{
 			Id = id;
 			Date = date;
 			Hours_worked = hours_worked;
 			Salary = salary;
 			Employee_id = employee_id;
+			this.isNew = isNew;
 		}
 	}
 }

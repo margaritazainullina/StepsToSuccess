@@ -26,7 +26,8 @@ public class Enterprise_docsDAO {
 			DateTime expiration_date = Convert.ToDateTime(data["expiration_date"]);
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 
-			Enterprise_docs enterprise_doc = new Enterprise_docs(id, availability, is_active, expiration_date, document_id, enterprise_id);
+			Enterprise_docs enterprise_doc = new Enterprise_docs(id, availability, is_active, expiration_date, 
+			                                                     document_id, enterprise_id, false);
 			Debug.Log("Get enterprise_doc "+id);
 			enterprise_docs.Add(enterprise_doc);
 		}
@@ -51,7 +52,8 @@ public class Enterprise_docsDAO {
 			DateTime expiration_date = Convert.ToDateTime(data["expiration_date"]);
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			
-			Enterprise_docs enterprise_doc = new Enterprise_docs(id, availability, is_active, expiration_date, document_id, enterprise_id);
+			Enterprise_docs enterprise_doc = new Enterprise_docs(id, availability, is_active, expiration_date, 
+			                                                     document_id, enterprise_id, false);
 			Debug.Log("Get enterprise_doc "+id);
 			enterprise_docs.Add(enterprise_doc);
 		}
@@ -62,7 +64,7 @@ public class Enterprise_docsDAO {
 	public static void InsertEnterprise_docs (MySqlConnection _connection, List<Enterprise_docs> enterprise_docs){		
 		foreach (Enterprise_docs enterprise_doc in enterprise_docs) {
 			_connection.Open ();
-			string Query = "INSERT INTO `enterprise_docs` values(" + enterprise_doc.Id + "," + enterprise_doc.Document_id + "," + enterprise_doc.Availability + 
+			string Query = "INSERT INTO enterprise_docs(document_id,availability,is_active,expiration_date,enterprise_id) values(" + enterprise_doc.Document_id + "," + enterprise_doc.Availability + 
 				"," + enterprise_doc.Is_active + ",'" + Helper.ToMySQLDateTimeFormat(enterprise_doc.Expiration_date) + "'," + enterprise_doc.Enterprise_id + ");";
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
@@ -73,8 +75,9 @@ public class Enterprise_docsDAO {
 		}
 	}
 
-	public static void UpdateEnterprise_docs (MySqlConnection _connection, List<Enterprise_docs> enterprise_docs){		
-		foreach (Enterprise_docs enterprise_doc in enterprise_docs) {
+	public static void UpdateEnterprise_docs (MySqlConnection _connection){		
+		foreach (Enterprise_docs enterprise_doc in Character.Instance.Enterprise.Enterprise_docs) {
+			if(enterprise_doc.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `enterprise_docs` SET document_id=" + enterprise_doc.Document_id + ", availability=" + enterprise_doc.Availability + ", is_active=" + 
 				enterprise_doc.Is_active + ", expiration_date='" + Helper.ToMySQLDateTimeFormat(enterprise_doc.Expiration_date) + "', enterprise_id=" + 

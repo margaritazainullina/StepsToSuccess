@@ -12,20 +12,23 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Asset 
-	{	//MAKE dao CLASS STATIC //ENTERPRISE TABLE CONNECTION!
+	{	
 		public Int64 Id { get; set; }
 		public decimal Value { get; set; }
 		public DateTime Asset_date { get; set; }
+		public bool isNew { get; private set; }
 
 		public Int64 Enterprise_id { get; set; }
 
-		public Asset (Int64 id, decimal value, DateTime asset_date, Int64 enterprise_id)
+		public Asset (Int64 id, decimal value, DateTime asset_date, Int64 enterprise_id, bool isNew)
 		{
 			Id = id;
 			Value = value;
 			Asset_date = asset_date;
 			Enterprise_id = enterprise_id;
+			this.isNew = isNew;
 		}
 	}
 }

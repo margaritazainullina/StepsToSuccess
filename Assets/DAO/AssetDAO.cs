@@ -29,7 +29,7 @@ public class AssetDAO {
 				DateTime asset_date = Convert.ToDateTime(data["asset_date"]);
 				Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 
-				asset = new Asset(id, value,asset_date, enterprise_id);
+				asset = new Asset(id, value,asset_date, enterprise_id, false);
 
 				Debug.Log("Get asset id="+id+" and value="+value);
 				assets.Add(asset);
@@ -65,7 +65,7 @@ public class AssetDAO {
 				DateTime asset_date = Convert.ToDateTime(data["asset_date"]);
 				Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 				
-				asset = new Asset(id, value,asset_date, enterprise_id);
+				asset = new Asset(id, value,asset_date, enterprise_id, false);
 				
 				Debug.Log("Get asset id="+id+" and value="+value);
 				assets.Add(asset);
@@ -85,7 +85,7 @@ public class AssetDAO {
 		foreach (Asset asset in assets) {
 			_connection.Open();
 
-			string Query = "INSERT INTO `asset` values(" + asset.Id + "," + asset.Value + ",'" + Helper.ToMySQLDateTimeFormat(asset.Asset_date) 
+			string Query = "INSERT INTO asset(value,asset_date,enterprise_id) values(" + asset.Value + ",'" + Helper.ToMySQLDateTimeFormat(asset.Asset_date) 
 				+ "'," + asset.Enterprise_id + ");";
 
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -98,8 +98,9 @@ public class AssetDAO {
 		}
 	}
 
-	public static void UpdateAssets (MySqlConnection _connection, List<Asset> assets){		
-		foreach (Asset asset in assets) {
+	public static void UpdateAssets (MySqlConnection _connection){		
+		foreach (Asset asset in Character.Instance.Enterprise.Assets) {
+			if(asset.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `asset` SET value='" + asset.Value + "', asset_date='" + Helper.ToMySQLDateTimeFormat(asset.Asset_date) + "', enterprise_id=" + 
 				asset.Enterprise_id +  " where id=" + asset.Id + ";";

@@ -25,7 +25,7 @@ public class Salary_paymentDAO {
 			decimal? salary = Helper.GetValueOrNull<decimal>(Convert.ToString(data["salary"]));
 			Int64 employee_id = Convert.ToInt64(data["employee_id"]);
 
-			Salary_payment salary_payment = new Salary_payment(id, date, hours_worked, salary, employee_id);
+			Salary_payment salary_payment = new Salary_payment(id, date, hours_worked, salary, employee_id, false);
 			Debug.Log("Get salary_payment id="+id);
 			salary_payments.Add(salary_payment);
 		}
@@ -51,7 +51,7 @@ public class Salary_paymentDAO {
 			decimal? salary = Helper.GetValueOrNull<decimal>(Convert.ToString(data["salary"]));
 			Int64 employee_id = Convert.ToInt64(data["employee_id"]);
 			
-			Salary_payment salary_payment = new Salary_payment(id, date, hours_worked, salary, employee_id);
+			Salary_payment salary_payment = new Salary_payment(id, date, hours_worked, salary, employee_id, false);
 			Debug.Log("Get salary_payment id="+id);
 			salary_payments.Add(salary_payment);
 		}
@@ -62,7 +62,7 @@ public class Salary_paymentDAO {
 	public static void InsertSalary_payments (MySqlConnection _connection, List<Salary_payment> salary_payments){		
 		foreach (Salary_payment salary_payment in salary_payments) {
 			_connection.Open ();
-			string Query = "INSERT INTO `salary_payment`(`date`,hours_worked, salary,employee_id) values(" + salary_payment.Id + ",'" + Helper.ToMySQLDateTimeFormat(salary_payment.Date) + "'," + salary_payment.Hours_worked + "," + 
+			string Query = "INSERT INTO salary_payment(`date`,hours_worked, salary,employee_id) values('" + Helper.ToMySQLDateTimeFormat(salary_payment.Date) + "'," + salary_payment.Hours_worked + "," + 
 				salary_payment.Salary + "," + salary_payment.Employee_id + ");";
 			
 			
@@ -75,20 +75,26 @@ public class Salary_paymentDAO {
 			_connection.Close ();
 		}
 	}
-	public static void UpdateAssets (MySqlConnection _connection, List<Salary_payment> salary_payments){		
-		foreach (Salary_payment salary_payment in salary_payments) {
-			_connection.Open ();
-			string Query = "UPDATE `salary_payment` SET date='" + Helper.ToMySQLDateTimeFormat(salary_payment.Date) + "', hours_worked=" + salary_payment.Hours_worked + 
-				", salary=" + salary_payment.Salary + ", employee_id=" + salary_payment.Employee_id + " where id=" + salary_payment.Id + ";";
-			
-			
-			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
-			
-			MySqlCommand command = new MySqlCommand (Query, _connection);
- 
-			command.ExecuteReader ();
-			Debug.Log ("Update salary_payment id="+salary_payment.Id);
-			_connection.Close ();
+	public static void UpdateAssets (MySqlConnection _connection){		
+		foreach (Employee employee in Character.Instance.Enterprise.Employees) 
+		{
+			if(employee.Salary_payments == null) continue;
+			foreach (Salary_payment salary_payment in employee.Salary_payments) {
+					if (salary_payment.isNew)
+							continue;
+					_connection.Open ();
+					string Query = "UPDATE `salary_payment` SET date='" + Helper.ToMySQLDateTimeFormat (salary_payment.Date) + "', hours_worked=" + salary_payment.Hours_worked + 
+							", salary=" + salary_payment.Salary + ", employee_id=" + salary_payment.Employee_id + " where id=" + salary_payment.Id + ";";
+
+
+					Query = Helper.ReplaceUpdateQueryVoidWithNulls (Query);
+
+					MySqlCommand command = new MySqlCommand (Query, _connection);
+
+					command.ExecuteReader ();
+					Debug.Log ("Update salary_payment id=" + salary_payment.Id);
+					_connection.Close ();
+			}
 		}
 	}
 	

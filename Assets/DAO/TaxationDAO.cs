@@ -29,7 +29,7 @@ public class TaxationDAO {
 			double income_duty = Convert.ToDouble(data["income_duty"]);
 
 			Taxation taxation = new Taxation(id, taxation_group, max_revenue, max_employee, 
-			                                 VAT, income_duty);
+			                                 VAT, income_duty, false);
 			Debug.Log("Get taxation " + id);
 			taxations.Add(taxation);
 		}
@@ -40,7 +40,7 @@ public class TaxationDAO {
 	public static void InsertTaxations (MySqlConnection _connection, List<Taxation> taxations){		
 		foreach (Taxation taxation in taxations) {
 			_connection.Open ();
-			string Query = "INSERT INTO `taxation` values(" + taxation.Id + "," + taxation.Taxation_group + "," + 
+			string Query = "INSERT INTO taxation(taxation_group,max_revenue,max_employee,VAT,income_duty,type) values(" + taxation.Taxation_group + "," + 
 				taxation.Max_revenue + "," + taxation.Max_employee + "," + taxation.VAT + "," + taxation.Income_duty + ");";
 			
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -52,8 +52,9 @@ public class TaxationDAO {
 			_connection.Close ();
 		}
 	}
-	public static void UpdateTaxations (MySqlConnection _connection, List<Taxation> taxations){		
-		foreach (Taxation taxation in taxations) {
+	public static void UpdateTaxation (MySqlConnection _connection){		
+		Taxation taxation = Character.Instance.Enterprise.Taxation;
+			if(taxation.isNew) return;
 			_connection.Open ();
 			string Query = "UPDATE `taxation` SET taxation_group=" + taxation.Taxation_group + ", max_revenue=" + taxation.Max_revenue + 
 				", max_employee=" + taxation.Max_employee + ", VAT=" + taxation.VAT + ", income_duty=" + taxation.Income_duty + " where id=" + taxation.Id + ";";
@@ -66,7 +67,6 @@ public class TaxationDAO {
 			command.ExecuteReader ();
 			Debug.Log ("Update role " + taxation.Id);
 			_connection.Close ();
-		}
 	}
 	
 	public static void DeleteTaxations (MySqlConnection _connection, List<Taxation> taxations){		

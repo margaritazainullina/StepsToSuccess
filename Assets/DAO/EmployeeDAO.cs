@@ -27,7 +27,7 @@ public class EmployeeDAO {
 			Int64 role_id = Convert.ToInt64(data["role_id"]);
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 
-			Employee employee = new Employee(id, title, qualification, salary, role_id, enterprise_id);
+			Employee employee = new Employee(id, title, qualification, salary, role_id, enterprise_id, false);
 			Debug.Log("Get employee "+title);
 			employees.Add(employee);
 		}
@@ -53,7 +53,7 @@ public class EmployeeDAO {
 			Int64 role_id = Convert.ToInt64(data["role_id"]);
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			
-			Employee employee = new Employee(id, title, qualification, salary, role_id, enterprise_id);
+			Employee employee = new Employee(id, title, qualification, salary, role_id, enterprise_id, false);
 			Debug.Log("Get employee "+title);
 			employees.Add(employee);
 		}
@@ -64,7 +64,7 @@ public class EmployeeDAO {
 	public static void InsertEmployees (MySqlConnection _connection, List<Employee> employees){		
 		foreach (Employee employee in employees) {
 			_connection.Open ();
-			string Query = "INSERT INTO `employee` values(" + employee.Id + ",'" + employee.Title + 
+			string Query = "INSERT INTO employee(title,salary,qualification,role_id,enterprise_id) values('" + employee.Title + 
 				"'," + employee.Qualification + "," + employee.Salary + "," + employee.Role_id + 
 					"," + employee.Enterprise_id + ");";
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -76,8 +76,9 @@ public class EmployeeDAO {
 		}
 	}
 
-	public static void UpdateEmployees (MySqlConnection _connection, List<Employee> employees){		
-		foreach (Employee employee in employees) {
+	public static void UpdateEmployees (MySqlConnection _connection){		
+		foreach (Employee employee in Character.Instance.Enterprise.Employees) {
+			if(employee.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `employee` SET title='" + employee.Title + "', qualification=" + 
 					employee.Qualification + ", salary=" + employee.Salary + ", role_id=" + employee.Role_id +
@@ -116,7 +117,7 @@ public class EmployeeDAO {
 		Int64 role_id = Convert.ToInt64(data["role_id"]);
 		Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 		
-		Employee employee = new Employee(id, title, qualification, salary, role_id, enterprise_id);
+		Employee employee = new Employee(id, title, qualification, salary, role_id, enterprise_id, false);
 		Debug.Log("Get employee "+title); 
 
 		_connection.Close ();

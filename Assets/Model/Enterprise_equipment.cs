@@ -12,21 +12,22 @@
 using System;
 namespace Model
 {
+	[Serializable]
 	public class Enterprise_equipment
 	{
 		public DateTime Purchase_date { get; set; }
 		public int? Quantity { get; set; }
 		public int? Lease_term { get; set; }
 		public bool? IsRunning { get; set; }
+		public bool isNew { get; private set; }
 
 		public Int64 Enterprise_id { get; set; }
 		public Int64 Equipment_id { get; set; }
 
-		public Enterprise Enterprise { get; set; }
-		public Equipment Equipment { get; set; }
-		
+		public virtual Equipment Equipment { get; set; }
+
 		public Enterprise_equipment (DateTime purchase_date, int? quantity, int? lease_term, 
-		                             bool? isRunning, Int64 enterprise_id, Int64 equipment_id)
+		                             bool? isRunning, Int64 enterprise_id, Int64 equipment_id, bool isNew)
 		{
 			Purchase_date = purchase_date;
 			Quantity = quantity;
@@ -34,6 +35,7 @@ namespace Model
 			IsRunning = isRunning;
 			Enterprise_id = enterprise_id;
 			Equipment_id = equipment_id;
+			this.isNew = isNew;
 		}
 	}
 }

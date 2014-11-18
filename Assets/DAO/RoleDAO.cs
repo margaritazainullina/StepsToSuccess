@@ -25,7 +25,7 @@ public class RoleDAO {
 			decimal min_salary = Convert.ToDecimal(data["min_salary"]);
 			decimal max_salary = Convert.ToDecimal(data["max_salary"]);
 
-			Role role = new Role(id, title, min_salary, max_salary);
+			Role role = new Role(id, title, min_salary, max_salary, false);
 			Debug.Log("Get role " + title);
 			roles.Add(role);
 		}
@@ -49,7 +49,7 @@ public class RoleDAO {
 			decimal min_salary = Convert.ToDecimal(data["min_salary"]);
 			decimal max_salary = Convert.ToDecimal(data["max_salary"]);
 			
-			role = new Role(id, title, min_salary, max_salary);
+			role = new Role(id, title, min_salary, max_salary, false);
 			Debug.Log("Get role " + title);
 		}
 		_connection.Close ();
@@ -59,7 +59,7 @@ public class RoleDAO {
 	public static void InsertRoles (MySqlConnection _connection, List<Role> roles){		
 		foreach (Role role in roles) {
 			_connection.Open ();
-			string Query = "INSERT INTO `role` values(" + role.Id + ",'" + role.Title + "'," + 
+			string Query = "INSERT INTO role(title,min_salary,max_salary) values('" + role.Title + "'," + 
 				role.Min_salary + "," + role.Max_salary + ");";
 
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -72,6 +72,7 @@ public class RoleDAO {
 	}
 	public static void UpdateRoles (MySqlConnection _connection, List<Role> roles){		
 		foreach (Role role in roles) {
+			if(role.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `role` SET title='" + role.Title + "', min_salary=" + role.Min_salary + 
 				", max_salary=" + role.Max_salary + " where id=" + role.Id + ";";

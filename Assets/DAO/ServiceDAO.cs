@@ -29,7 +29,7 @@ public class ServiceDAO {
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			Int64 company_id = Convert.ToInt64(data["company_id"]);
 			
-			Service service = new Service(id,title,price,period,periodsPaid,effectiveness,enterprise_id,company_id);
+			Service service = new Service(id,title,price,period,periodsPaid,effectiveness,enterprise_id,company_id, false);
 			Debug.Log("Get service "+title);
 			services.Add(service);
 		}
@@ -57,7 +57,7 @@ public class ServiceDAO {
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			Int64 company_id = Convert.ToInt64(data["company_id"]);
 			
-			Service service = new Service(id,title,price,period,periodsPaid,effectiveness,enterprise_id,company_id);
+			Service service = new Service(id,title,price,period,periodsPaid,effectiveness,enterprise_id,company_id, false);
 			// effectiveness);
 			Debug.Log("Get service "+title);
 			services.Add(service);
@@ -66,36 +66,10 @@ public class ServiceDAO {
 		return services;
 	}
 
-/*
-	public static Service GetServiceById (MySqlConnection _connection, Int64 id){		
-		_connection.Open ();
-		//retrieve from db
-		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT * FROM `service` WHERE id=" + id;
-		MySqlDataReader data = command.ExecuteReader();
-		
-		Service service = null;
-		
-		//read data from dataReader and form list of Character instances
-		while (data.Read()){
-			string title = (string)data["title"];
-			decimal price = Convert.ToDecimal(data["price"]);
-			int period = Convert.ToInt32(data["period"]);
-			Int64 company_id = Convert.ToInt64(data["company_id"]);
-			Int64 action_id = Convert.ToInt64(data["action_id"]);
-			decimal effectiveness = Convert.ToDecimal(data["effectiveness"]);
-			
-			service = null; //new Service(id, title, price, period, effectiveness);
-			Debug.Log("Get service "+title);
-		}
-		_connection.Close ();
-		return service;
-	}*/
-
 	public static void InsertServices (MySqlConnection _connection, List<Service> services){		
 		foreach (Service service in services) {
 			_connection.Open ();
-			string Query = "INSERT INTO `service` values(" + service.Id + ",'" + service.Title + "'," + 
+			string Query = "INSERT INTO service(title,price,period,effectiveness,periods_paid,enterprise_id,company_id) values('" + service.Title + "'," + 
 				service.Price + "," + service.Period+ "," + service.PeriodsPaid + "," + service.Effectiveness + "," + service.Enterprise_id + "," + service.Company_id + ");";
 			
 			
@@ -108,8 +82,9 @@ public class ServiceDAO {
 			_connection.Close ();
 		}
 	}
-	public static void UpdateServices (MySqlConnection _connection, List<Service> services){		
-		foreach (Service service in services) {
+	public static void UpdateServices (MySqlConnection _connection){		
+		foreach (Service service in Character.Instance.Enterprise.Services) {
+			if(service.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `service` SET title='" + service.Title + "', price=" + service.Price + 
 				", period=" + service.Period + ", periods_paid=" + service.PeriodsPaid +", effectiveness=" + service.Effectiveness + ", enterprise_id=" + 

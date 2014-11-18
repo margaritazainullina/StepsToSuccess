@@ -25,7 +25,7 @@ public class DocumentDAO {
 			Int64 id = Convert.ToInt64(data["id"]);
 			int path = Convert.ToInt32(data["path"]);
 
-			Document document = new Document(id, title, type, path);
+			Document document = new Document(id, title, type, path, false);
 			Debug.Log("Get character "+title);
 			documents.Add(document);
 		}
@@ -49,7 +49,7 @@ public class DocumentDAO {
 			id = Convert.ToInt64(data["id"]);
 			int path = Convert.ToInt32(data["path"]);
 			
-			Document document = new Document(id, title, type, path);
+			Document document = new Document(id, title, type, path, false);
 			Debug.Log("Get character "+title);
 			documents.Add(document);
 		}
@@ -60,7 +60,7 @@ public class DocumentDAO {
 	public static void InsertDocuments (MySqlConnection _connection, List<Document> documents){		
 		foreach (Document document in documents) {
 			_connection.Open ();
-			string Query = "INSERT INTO `document` values(" + document.Id + ",'" + document.Title + "','" + 
+			string Query = "INSERT INTO document(title,type,path) values('"  + document.Title + "','" + 
 				document.Type + "'," + document.Path + ");";
 
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -71,18 +71,23 @@ public class DocumentDAO {
 			_connection.Close ();
 		}
 	}
-	public static void UpdateDocuments (MySqlConnection _connection, List<Document> documents){		
-		foreach (Document document in documents) {
-			_connection.Open ();
-			string Query = "UPDATE `document` SET title='" + document.Title + "', type='" + document.Type + 
-				"', path=" + document.Path  + " where id=" + document.Id + ";";
+	public static void UpdateDocuments (MySqlConnection _connection){	
+		foreach (Enterprise_docs enterprise_docs in Character.Instance.Enterprise.Enterprise_docs) 
+		{
+			foreach (Document document in enterprise_docs.Documents) {
+					if (document.isNew)
+							continue;
+					_connection.Open ();
+					string Query = "UPDATE `document` SET title='" + document.Title + "', type='" + document.Type + 
+							"', path=" + document.Path + " where id=" + document.Id + ";";
 
-			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
-			MySqlCommand command = new MySqlCommand (Query, _connection);
+					Query = Helper.ReplaceUpdateQueryVoidWithNulls (Query);
+					MySqlCommand command = new MySqlCommand (Query, _connection);
 
-			command.ExecuteReader ();
-			Debug.Log ("Update document " + document.Title);
-			_connection.Close ();
+					command.ExecuteReader ();
+					Debug.Log ("Update document " + document.Title);
+					_connection.Close ();
+			}
 		}
 	}
 	

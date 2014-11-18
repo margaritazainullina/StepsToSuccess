@@ -11,6 +11,7 @@ using System;
 
 namespace Model
 {
+	[Serializable]
 	public class Product
 	{
 		public Int64 Id { get; set; }
@@ -18,11 +19,12 @@ namespace Model
 		public decimal Price { get; set; }
 		public double Quality { get; set; }
 		public decimal Prime_cost { get; set; } 
+		public bool isNew { get; private set; }
 
 		public Int64 Project_id { get; set; }
 
 		public Product (Int64 id, string title, decimal price, double quality,
-		                decimal prime_cost, Int64 project_id)
+		                decimal prime_cost, Int64 project_id, bool isNew)
 		{
 			Id = id;
 			Title = title;
@@ -30,13 +32,9 @@ namespace Model
 			Quality = quality;
 			Prime_cost = prime_cost;
 			Project_id = project_id;
+			this.isNew = isNew;
 		}
 
 		public Product (){}
-		/*
-		public Product (Int64 id, string title, decimal prime_cost)
-			: this(id,title,0,0,prime_cost)
-		{
-		}*/
 	}
 }

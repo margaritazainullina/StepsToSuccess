@@ -8,11 +8,11 @@ using AssemblyCSharp;
 public class EnterpriseDAO { //SINGLETONE
 	
 	//returns list with all characters from db
-	public static Enterprise LoadEnterprise(MySqlConnection _connection, Character character){		
+	public static Enterprise LoadEnterprise(MySqlConnection _connection){		
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT * FROM `enterprise` WHERE id=" + character.Id;
+		command.CommandText = "SELECT * FROM `enterprise` WHERE id=" + Character.Instance.Id;
 		MySqlDataReader data = command.ExecuteReader();
 		
 		List<Enterprise> enterprises = new List<Enterprise>();
@@ -37,35 +37,10 @@ public class EnterpriseDAO { //SINGLETONE
 		return enterprise;
 	}
 
-	//returns list with all characters from db
-	/*public static Enterprise GetEnterpriseById (MySqlConnection _connection, Int64 id){		
-		_connection.Open ();
-		//retrieve from db
-		MySqlCommand command = _connection.CreateCommand();
-		command.CommandText = "SELECT * FROM `enterprise` WHERE id=" + id;
-		MySqlDataReader data = command.ExecuteReader();
-
-		Enterprise enterprise = null;
-
-		//read data from dataReader and form list of Character instances
-		while (data.Read()){
-			string title = Convert.ToString(data["balance"]);
-			decimal balance = Convert.ToDecimal(data["balance"]);
-			double stationary =Convert.ToDouble(data["stationary"]);
-			Int16? type = Helper.GetValueOrNull<Int16>(Convert.ToString(data["type"]));
-			
-			enterprise = new Enterprise(id, title, balance, stationary, type,
-			                            taxation_id);
-			Debug.Log("Get enterprise "+title);
-		}
-		_connection.Close ();
-		return enterprise;
-	}*/
-
 	public static void InsertEnterprises (MySqlConnection _connection, List<Enterprise> enterprises){		
 		foreach (Enterprise enterprise in enterprises) {
 			_connection.Open ();
-			string Query = "INSERT INTO `enterprise` values(" + enterprise.Id + ",'" + enterprise.Title + "'," + enterprise.Balance + "," + 
+			string Query = "INSERT INTO enterprise(title,balance,stationary,type,taxation_id) values('" + enterprise.Title + "'," + enterprise.Balance + "," + 
 				enterprise.Stationary + "," + enterprise.Type + "," + enterprise.Taxation_id + ");";
 
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -77,19 +52,17 @@ public class EnterpriseDAO { //SINGLETONE
 		}
 	}
 
-	public static void UpdateEnterprises (MySqlConnection _connection, List<Enterprise> enterprises){		
-		foreach (Enterprise enterprise in enterprises) {
+	public static void UpdateEnterprise (MySqlConnection _connection){		
 			_connection.Open ();
-			string Query = "UPDATE `enterprise` SET title='" + enterprise.Title + "', balance=" + enterprise.Balance + ", stationary=" + enterprise.Stationary + 
-				", type=" + enterprise.Type + ", taxation_id=" + enterprise.Taxation_id + " where id=" + enterprise.Id + ";";
+		string Query = "UPDATE `enterprise` SET title='" + Character.Instance.Enterprise.Title + "', balance=" + Character.Instance.Enterprise.Balance + ", stationary=" + Character.Instance.Enterprise.Stationary + 
+			", type=" + Character.Instance.Enterprise.Type + ", taxation_id=" + Character.Instance.Enterprise.Taxation_id + " where id=" + Character.Instance.Enterprise.Id + ";";
 
 			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  
 			command.ExecuteReader ();
-			Debug.Log ("Update enterprise " + enterprise.Title);
+		Debug.Log ("Update enterprise " + Character.Instance.Enterprise.Title);
 			_connection.Close ();
-		}
 	}
 	
 	public static void DeleteEnterprises (MySqlConnection _connection, List<Enterprise> enterprises){		

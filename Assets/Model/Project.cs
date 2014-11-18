@@ -14,6 +14,7 @@ using MySql.Data.MySqlClient;
 //TODO: Constructors, all datetime CRUDs, test all CRUD 
 namespace Model
 {
+	[Serializable]
 	public class Project
 	{
 		public Int64 Id { get; set; }
@@ -25,16 +26,18 @@ namespace Model
 		public int State { get; set; }
 		public decimal Stated_budget { get; set; } 
 		public Int64 Enterprise_id { get; set; }
+		public bool isNew { get; private set; }
 		
-		public virtual Product Product {get; set;}
-		public virtual Project_stage Project_stage {get; set;}
-		public virtual Enterprise Enterprise {get; set;}
 		public virtual ICollection<Team_member> Team_members {get; set;}
 		public decimal Expenditures { get; set; }
+
+		public virtual Product Product { get; set; }
+
+		public virtual Project_stage Project_stage { get; set; }
 		
 		public Project (Int64 id, string title, DateTime planned_begin_date, DateTime planned_end_date,
 		                DateTime real_begin_date, DateTime real_end_date, int state, 
-		                decimal stated_budget, Int64 enterprise_id)
+		                decimal stated_budget, Int64 enterprise_id, bool isNew)
 		{		                
 			Title = title;
 			Planned_begin_date = planned_begin_date;
@@ -44,14 +47,14 @@ namespace Model
 			Real_end_date = real_end_date;
 			State = state;
 			Stated_budget = stated_budget;
-
+			this.isNew = isNew;
 			Enterprise_id = enterprise_id;
 		} 
 
 		public Project(string title, DateTime planned_begin_date, DateTime planned_end_date,
-		                decimal stated_budget)
+		                decimal stated_budget, bool isNew)
 			: this(0, title, planned_begin_date, planned_end_date, new DateTime(), new DateTime(), 0, 
-			       stated_budget, 0)
+			       stated_budget, 0, isNew)
 		{		                
 		}
 
@@ -59,17 +62,18 @@ namespace Model
 		{
 			this.State = 1;
 			this.Real_begin_date = DateTime.Now;
-			Enterprise.Projects.Add (this);
+			//Enterprise.Projects.Add (this); ?????????????????????????????????????????/
 		}
 
 		public void AppointEmployee(Int64 employee_id, Int64 project_id)
 		{
-			Team_members.Add (new Team_member(employee_id, project_id));
+			Team_members.Add (new Team_member(employee_id, project_id, true));
 		}
 
 		public void FireEmployee(Int64 employee_id, Int64 project_id)
 		{
-			Team_members.Remove(new Team_member(employee_id, project_id));
+			Team_members.Remove(new Team_member(employee_id, project_id, false));
+			Team_members.Remove(new Team_member(employee_id, project_id, true));
 		}
 
 		public void Cancel(MySqlConnection connection)
@@ -77,8 +81,8 @@ namespace Model
 			Team_members.Clear ();
 			this.State = 3;
 		}
-
-		public void MakeProgress(DateTime salary_payment_date)
+		///////TROUBLE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	/*	public void MakeProgress(DateTime salary_payment_date)
 		{
 						double conception_hours = 0;
 						double programming_hours = 0;
@@ -86,7 +90,7 @@ namespace Model
 						double design_hours = 0;
 
 						foreach (Team_member tm in Team_members) {
-				Employee e = Enterprise.getEmployeeWithId(tm.Employee_id);
+				Employee e = Character.Instance.Enterprise.Employees.getEmployeeWithId(tm.Employee_id);
 								foreach (Salary_payment sp in e.Salary_payments) {
 										int hours_worked = (int)sp.Hours_worked;
 
@@ -115,7 +119,7 @@ namespace Model
 			
 								}
 						}
-				}		
+				}		*/
 
 		public void Complete(string product_title)
 		{
@@ -125,7 +129,7 @@ namespace Model
 				(this.Real_end_date - this.Planned_end_date).TotalDays/(this.Planned_end_date-this.Planned_begin_date).TotalDays;
 
 			Product = new Product (0, product_title, prime_cost,
-			                              quality, prime_cost, this.Id);
+			                       quality, prime_cost, this.Id, true);
 
 			//Updating prject state to finished
 			this.State = 2;
@@ -137,7 +141,7 @@ namespace Model
 				Dictionary<Int64,double> employeeData = new Dictionary<Int64, double>();
 				foreach (Team_member tm in Team_members){
 					int hours_worked=0;
-					Employee e = Enterprise.getEmployeeWithId(tm.Employee_id);
+					Employee e = null; //Enterprise.getEmployeeWithId(tm.Employee_id);
 					foreach (Salary_payment sp in e.Salary_payments){
 						hours_worked+=(int)sp.Hours_worked;
 					}
@@ -146,9 +150,10 @@ namespace Model
 			}
 
 			//changing enterprise budget
-			Asset a1 = new Asset (1, Product.Price, DateTime.Now, Id);
-			Enterprise.Balance += Product.Price;
-			Enterprise.Assets.Add (a1);
+			Asset a1 = new Asset (1, Product.Price, DateTime.Now, Id, false);
+
+			Character.Instance.Enterprise.Balance += Product.Price;
+			Character.Instance.Enterprise.Assets.Add (a1);
 
 			//delete team members
 			Team_members.Clear();

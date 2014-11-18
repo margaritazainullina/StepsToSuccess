@@ -28,7 +28,7 @@ public class Enterprise_equipmentDAO {
 			Int64 equipment_id = Convert.ToInt64(data["equipment_id"]);
 
 			Enterprise_equipment enterprise_equip = new Enterprise_equipment(purchase_date, quantity, lease_term, isRunning, 
-			                                                                 enterprise_id, equipment_id);
+			                                                                 enterprise_id, equipment_id, false);
 
 			Debug.Log("Get enterprise_equip Enterprise_id="+enterprise_id+" and Equipment_id="+equipment_id);
 			enterprise_equipment.Add(enterprise_equip);
@@ -57,7 +57,7 @@ public class Enterprise_equipmentDAO {
 			Int64 equipment_id = Convert.ToInt64(data["equipment_id"]);
 			
 			Enterprise_equipment enterprise_equip = new Enterprise_equipment(purchase_date, quantity, lease_term, isRunning, 
-			                                                                 enterprise_id, equipment_id);
+			                                                                 enterprise_id, equipment_id, false);
 			
 			Debug.Log("Get enterprise_equip Enterprise_id="+enterprise_id+" and Equipment_id="+equipment_id);
 			enterprise_equipment.Add(enterprise_equip);
@@ -81,8 +81,9 @@ public class Enterprise_equipmentDAO {
 		}
 	}
 
-	public static void UpdateEnterprise_equipment (MySqlConnection _connection, List<Enterprise_equipment> enterprise_equipment){		
-		foreach (Enterprise_equipment enterprise_equip in enterprise_equipment) {
+	public static void UpdateEnterprise_equipment (MySqlConnection _connection){		
+		foreach (Enterprise_equipment enterprise_equip in Character.Instance.Enterprise.Enterprise_equipment) {
+			if(enterprise_equip.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `enterprise_equipment` SET purchase_date='" + Helper.ToMySQLDateTimeFormat(enterprise_equip.Purchase_date) + "', quantity=" + enterprise_equip.Quantity + 
 				", lease_term=" + enterprise_equip.Lease_term + ", isRunning=" + enterprise_equip.IsRunning  + " where enterprise_id=" + enterprise_equip.Enterprise_id + " AND equipment_id=" + enterprise_equip.Equipment_id + ";";

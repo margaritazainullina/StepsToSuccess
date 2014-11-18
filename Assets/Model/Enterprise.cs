@@ -28,6 +28,7 @@ using AssemblyCSharp;
 
 namespace Model
 {
+	[Serializable]
 	public class Enterprise
 	{
 		public Int64 Id { get; set; }
@@ -38,16 +39,15 @@ namespace Model
 		public Int64 Taxation_id { get; set; }
 
 		public virtual Taxation Taxation { get; set; }
-		public virtual ICollection<Asset> Assets {get; set;}
-		public virtual ICollection<Service> Services {get; set;}
-		public virtual ICollection<Competitor> Competitors {get; set;}
+		public virtual List<Asset> Assets {get; set;}
+		public virtual List<Service> Services {get; set;}
+		public virtual List<Competitor> Competitors {get; set;}
 		public virtual List<Employee> Employees {get; set;}
-		public virtual ICollection<Enterprise_docs> Enterprise_docs {get; set;}
-		public virtual ICollection<Equipment> Equipment {get; set;}
-		public virtual ICollection<Revenue> Revenues {get; set;}
-		public virtual ICollection<Enterprise_equipment> Enterprise_equipment {get; set;}
-		public virtual ICollection<Project> Projects {get; set;}
-		public virtual ICollection<Salary_payment> Salary_payments{get; set;}
+		public virtual List<Enterprise_docs> Enterprise_docs {get; set;}
+		public virtual List<Equipment> Equipment {get; set;}
+		public virtual List<Enterprise_equipment> Enterprise_equipment {get; set;}
+		public virtual List<Project> Projects {get; set;}
+		public virtual List<Salary_payment> Salary_payments{get; set;}
 
 		public Enterprise (Int64 id, string title, decimal balance, double stationary,
 		                   Int16? type, Int64 taxation_id)
@@ -64,7 +64,7 @@ namespace Model
 		//private assets, investment, bank credit, private assets+investment, private assets+bank credit
 		public void CreateEnterpriseWithPrivateAssets (decimal personal){
 			Balance = personal;			
-			Asset a = new Asset (1, personal, DateTime.Now, Id);
+			Asset a = new Asset (1, personal, DateTime.Now, Id, false);
 			Assets.Add (a);
 		}
 
@@ -74,7 +74,7 @@ namespace Model
 
 		public void RecieveInvestment(Company investor){
 			Balance += investor.Investment;
-			Asset a = new Asset (1, investor.Investment, DateTime.Now, Id);
+			Asset a = new Asset (1, investor.Investment, DateTime.Now, Id, false);
 			Assets.Add (a);
 		}		
 
@@ -84,7 +84,7 @@ namespace Model
 
 		public void RecieveCredit(Company bank){
 			Balance += bank.Investment;
-			Asset a = new Asset (1, bank.Investment, DateTime.Now, Id);
+			Asset a = new Asset (1, bank.Investment, DateTime.Now, Id, false);
 			Assets.Add (a);
 	    }
 
@@ -213,30 +213,33 @@ namespace Model
 						s[9]+DateTime.Now.ToString ("dd.MM.yyyy");
 			}
 			Debug.Log("Enterprise.CompleteDocuments(): "+document);
-			return document;}		
-
+			return document;
+		}		
+		//remade all here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		public void PaySalary(MySqlConnection connection, Employee employee, int hours_worked, DateTime date)
 		{
 			Salary_payment salary_payment = new Salary_payment (0, DateTime.Now, hours_worked, 
-			                                                    (decimal?)(hours_worked * employee.Qualification), employee.Id);
+			                                                    (decimal?)(hours_worked * employee.Qualification), employee.Id, false);
 			Salary_payments.Add (salary_payment);
-			List<Project> projects = ProjectDAO.GetProjects (connection);
 			string Query;
 
 			decimal salary = 0;
-			foreach (Employee e in Employees) {
-								Boolean isFound = false;
-								//never mind, just magic
-								for (int i=e.Salary_payments.Count-1; i>=0; i--) {
+			foreach (Employee e in Employees) 
+			{
+				Boolean isFound = false;
+				//never mind, just magic
+				for (int i=e.Salary_payments.Count-1; i>=0; i--) 
+				{
 					List<Salary_payment> sp = (List<Salary_payment>)e.Salary_payments;
-										if (sp [i].Date == date) {
-												salary += (decimal)sp [i].Salary;
-												isFound = true;
-										} else if (isFound)
-												break;
-								}
-						}
-		   /* foreach (Project project in projects) 
+					if (sp [i].Date == date) 
+					{
+							salary += (decimal)sp [i].Salary;
+							isFound = true;
+					} 
+					else if (isFound) break;
+				}
+			}
+			foreach (Project project in Character.Instance.Enterprise.Projects) 
 			{
 				Query = "SELECT sum(Salary_payment.salary) as salary FROM Salary_payment, Employee, Team_member, Project" +
 					"WHERE Employee.Id=Salary_payment.Employee_id AND" +
@@ -250,63 +253,76 @@ namespace Model
 					project.Expenditures += Convert.ToDecimal(data["salary"]);
 				}
 
+				//project.Expenditures = 
+
 				this.Balance -= project.Expenditures;
-				PayUST (connection, project.Expenditures);
-			}*/
+				PayUST (project.Expenditures);
+			}
 			Balance -= salary;
-			Asset a = new Asset (1, salary, DateTime.Now, Id);
-			Assets.Add (a);
+			Asset asset = new Asset (0, salary, DateTime.Now, Id, true);
+			Assets.Add(asset);
 			PayUST(salary);
 
-			ProjectDAO.UpdateProjects (connection, projects);
+			//ProjectDAO.UpdateProjects (connection);
 		}
 
-		public void PayUST(decimal amountOfSalaryPaidToday){
-						//Balance -= ∑(Salary_payment. Salary)*0,036-зарплата_предпринимателю*0,347(???)
-						decimal ust = 0;
-						if (Type == 0) {
-								//if personal body
-								ust = amountOfSalaryPaidToday * (decimal)0.036;
+		public void PayUST(decimal amountOfSalaryPaidToday)
+		{
+			//Balance -= ∑(Salary_payment. Salary)*0,036-зарплата_предпринимателю*0,347(???)
+			decimal ust = 0;
+			if (Type == 0) 
+			{
+					//if personal body
+					ust = amountOfSalaryPaidToday * (decimal)0.036;
 
-						} else {
-								ust = amountOfSalaryPaidToday * (decimal)0.376;			
-						}
-						Asset a1 = new Asset (1, ust, DateTime.Now, Id);
-						Balance -= ust;
-						Assets.Add (a1);
+			} else 
+			{
+					ust = amountOfSalaryPaidToday * (decimal)0.376;			
+			}
+			Asset asset = new Asset (1, ust, DateTime.Now, Id, true);
+			Balance -= ust;
+			Assets.Add (asset);
+		}
+
+		public void LoanDisbursement()
+		{
+			//budget -= (investment*share)/period
+			foreach (Service s in Services) 
+			{
+				//if a loan hasn't been disbursed yet
+				if (s.Period < s.PeriodsPaid) 
+				{
+					s.PeriodsPaid++;
+					decimal loan = (s.Company.Investment * (decimal)s.Company.Share) / (decimal)s.Period;
+
+					Asset a1 = new Asset (1, loan, DateTime.Now, Id, false);
+					Balance -= loan;
+					Assets.Add (a1);
 				}
-
-		public void LoanDisbursement(){
-						//budget -= (investment*share)/period
-						foreach (Service s in Services) {
-								//if a loan hasn't been disbursed yet
-								if (s.Period < s.PeriodsPaid) {
-										s.PeriodsPaid++;
-										decimal loan = (s.Company.Investment * (decimal)s.Company.Share) / (decimal)s.Period;
-
-										Asset a1 = new Asset (1, loan, DateTime.Now, Id);
-										Balance -= loan;
-										Assets.Add (a1);
-								}
-						}
-				}
+			}
+		}
 	
-		public void SharePayout(){
-						//budget -= ∑ (revenue.Value за последний месяц)*share
-						foreach (Service s in Services) {
-								decimal income = TotalIncomeForPeriod (DateTime.DaysInMonth (DateTime.Now.Year, DateTime.Now.Month));
-								decimal payout = income * (decimal)s.Company.Share;
+		public void SharePayout()
+		{
+			//budget -= ∑ (revenue.Value за последний месяц)*share
+			foreach (Service s in Services) 
+			{
+				decimal income = TotalIncomeForPeriod (DateTime.DaysInMonth (DateTime.Now.Year, DateTime.Now.Month));
+				decimal payout = income * (decimal)s.Company.Share;
 
-								Asset a1 = new Asset (1, payout, DateTime.Now, Id);
-								Balance -= payout;
-								Assets.Add (a1);
-						}
-				}
-	
-	public Employee getEmployeeWithId(Int64 Id){
-		foreach (Employee e in Employees){
+				Asset a1 = new Asset (1, payout, DateTime.Now, Id, true);
+				Balance -= payout;
+				Assets.Add (a1);
+			}
+		}
+	//DO WE NEED IT?
+	public Employee getEmployeeWithId(Int64 Id)
+		{
+			foreach (Employee e in Employees)
+			{
 				if(e.Id == Id) return e;
 			}
 			return null;
-	}	
-	}}
+		}	
+	}
+}

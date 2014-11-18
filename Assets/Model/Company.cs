@@ -12,6 +12,7 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Company
 	{
 		public Int64 Id { get; set; }
@@ -19,17 +20,19 @@ namespace Model
 		public double Share { get; set; }
 		public int Period { get; set; }
 		public decimal Investment { get; set; }
+		public bool isNew { get; private set; }
 
 		public virtual ICollection<Service> Services {get; set;}
 
 		public Company (Int64 id, string title, double share, int period, 
-		                decimal investment)
+		                decimal investment, bool isNew)
 		{
 			Id = id;
 			Title = title;
 			Share = share;
 			Period = period;
 			Investment = investment;
+			this.isNew = isNew;
 		}
 	}
 }

@@ -12,24 +12,25 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Employee
 	{
 		public Int64 Id { get; set; }
 		public string Title { get; set; }
 		public double Qualification { get; set; }
 		public decimal Salary { get; set; }
+		public bool isNew { get; private set; }
 
 		public Int64 Role_id { get; set; }
 		public Int64 Enterprise_id { get; set; }
 
-		public virtual Role Role { get; set; }
-		public virtual Enterprise Enterprise { get; set; }
-
 		public virtual ICollection<Salary_payment> Salary_payments {get; set;}
 		public virtual ICollection<Team_member> Team_members {get; set;}
 
+		public virtual Role Role { get; set; }
+
 		public Employee (Int64 id, string title, double qualification, decimal salary, 
-		                 Int64 role_id, Int64 enterprise_id)
+		                 Int64 role_id, Int64 enterprise_id, bool isNew)
 		{
 			Id = id;
 			Title = title;
@@ -37,6 +38,7 @@ namespace Model
 			Salary = salary;
 			Role_id = role_id;
 			Enterprise_id = enterprise_id;
+			this.isNew = isNew;
 		}
 
 	}

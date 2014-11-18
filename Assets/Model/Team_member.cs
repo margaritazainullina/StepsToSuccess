@@ -11,15 +11,18 @@ using System;
 
 namespace Model
 {
+	[Serializable]
 	public class Team_member
 	{
 		public virtual Int64 Employee_id { get; set; }
 		public virtual Int64 Project_id { get; set; }
+		public bool isNew { get; private set; }
 		
-		public Team_member(Int64 employee_id, Int64 project_id)
+		public Team_member(Int64 employee_id, Int64 project_id, bool isNew)
 		{
 			Employee_id = employee_id;
 			Project_id = project_id;
+			this.isNew = isNew;
 		}
 	}
 }

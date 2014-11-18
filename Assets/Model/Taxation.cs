@@ -12,6 +12,7 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Taxation
 	{
 		public Int64 Id { get; set; }
@@ -21,9 +22,10 @@ namespace Model
 		public int Max_employee { get; set; }
 		public double VAT { get; set; }
 		public double Income_duty { get; set; }
+		public bool isNew { get; private set; }
 
 		public Taxation(Int64 id, int taxation_group, decimal max_revenue, 
-		                int max_employee, double VAT, double income_duty)
+		                int max_employee, double VAT, double income_duty, bool isNew)
 		{
 			Id = id;
 			Taxation_group = taxation_group;
@@ -31,6 +33,7 @@ namespace Model
 			Max_employee = max_employee;
 			this.VAT = VAT;
 			Income_duty = income_duty;
+			this.isNew = isNew;
 		}
 	}
 }

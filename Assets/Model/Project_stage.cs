@@ -12,6 +12,7 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Project_stage
 	{
 		
@@ -21,6 +22,7 @@ namespace Model
 		public int? Programming_hours { get; set; }
 		public int? Testing_hours { get; set; }
 		public int? Design_hours { get; set; }
+		public bool isNew { get; private set; }
 
 		public double? Conception_done { get; set; }
 		public double? Programming_done { get; set; }
@@ -30,7 +32,7 @@ namespace Model
 		public virtual Project Project { get; set; }
 		
 		public Project_stage(Int64 project_id, int? conception_hours, int? programming_hours, int? testing_hours, int? design_hours,
-		                     double? conception_done, double? programming_done, double? testing_done, double? design_done)
+		                     double? conception_done, double? programming_done, double? testing_done, double? design_done, bool isNew)
 		{
 			Conception_hours = conception_hours;
 			Programming_hours = programming_hours;
@@ -41,12 +43,13 @@ namespace Model
 			Testing_done = testing_done;
 			Design_done = design_done;
 			Project_id = project_id;
+			this.isNew = isNew;
 		}
 		public Project_stage(){	}
 
 		public Project_stage(Int64 project_id, int? conception_hours, int? programming_hours, int? testing_hours, 
-		                     int? design_hours)
-			:this(project_id,conception_hours,programming_hours,testing_hours,design_hours,null,null,null,null)
+		                     int? design_hours, bool isNew)
+			:this(project_id,conception_hours,programming_hours,testing_hours,design_hours,null,null,null,null, false)
 		{
 
 		}

@@ -12,21 +12,24 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Document
 	{
 		public Int64 Id { get; set; }
 		public string Title { get; set; }
 		public string Type { get; set; }
 		public int Path { get; set; }
+		public bool isNew { get; private set; }
 
 		public virtual ICollection<Enterprise_docs> Enterprise_docs {get; set;}
 
-		public Document (Int64 id, string title, string type, int path)
+		public Document (Int64 id, string title, string type, int path, bool isNew)
 		{
 			Id = id;
 			Title = title;
 			Type = type;
 			Path = path;
+			this.isNew = isNew;
 		}
 	}
 }

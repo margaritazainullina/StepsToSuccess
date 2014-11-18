@@ -28,7 +28,7 @@ public class Team_memberDAO {
 				Int64 employee_id = Convert.ToInt64(data["employee_id"]);
 				Int64 project_id = Convert.ToInt64(data["project_id"]);
 				
-				team_member  = new Team_member(employee_id, project_id);
+				team_member  = new Team_member(employee_id, project_id, false);
 				
 				Debug.Log("Get Team_members employee_id="+employee_id+" and project_id="+project_id);
 				team_members.Add(team_member);
@@ -62,7 +62,7 @@ public class Team_memberDAO {
 				Int64 employee_id = Convert.ToInt64(data["employee_id"]);
 				Int64 project_id = Convert.ToInt64(data["project_id"]);
 				
-				team_member  = new Team_member(employee_id, project_id);
+				team_member  = new Team_member(employee_id, project_id, false);
 				
 				Debug.Log("Get Team_members employee_id="+employee_id+" and project_id="+project_id);
 				team_members.Add(team_member);
@@ -96,7 +96,7 @@ public class Team_memberDAO {
 				Int64 employee_id = Convert.ToInt64(data["employee_id"]);
 				Int64 project_id = Convert.ToInt64(data["project_id"]);
 				
-				team_member  = new Team_member(employee_id, project_id);
+				team_member  = new Team_member(employee_id, project_id, false);
 				
 				Debug.Log("Get Team_members employee_id="+employee_id+" and project_id="+project_id);
 				team_members.Add(team_member);
@@ -131,7 +131,7 @@ public class Team_memberDAO {
 				Int64 employee_id = Convert.ToInt64(data["employee_id"]);
 				Int64 project_id = Convert.ToInt64(data["project_id"]);
 				
-				team_member  = new Team_member(employee_id, project_id);
+				team_member  = new Team_member(employee_id, project_id, false);
 				
 				Debug.Log("Get Team_members employee_id="+employee_id+" and project_id="+project_id);
 				team_members.Add(team_member);
@@ -151,7 +151,7 @@ public class Team_memberDAO {
 		foreach (Team_member team_member in team_members) {
 			_connection.Open();
 			
-			string Query = "INSERT INTO `Team_member` values(" + team_member.Employee_id + "," + team_member.Project_id + ");";
+			string Query = "INSERT INTO Team_member values(" + team_member.Employee_id + "," + team_member.Project_id + ");";
 			
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			
@@ -173,4 +173,6 @@ public class Team_memberDAO {
 			_connection.Close ();
 		}
 	}
-}
+
+
+}	

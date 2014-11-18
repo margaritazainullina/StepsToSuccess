@@ -9,31 +9,30 @@ using AssemblyCSharp;
 public class CharacterDAO {
 	
 	//returns list with all characters from db
-	public static Character LoadCharacterByName (MySqlConnection _connection, string name){		
+	public static void LoadCharacterByName (MySqlConnection _connection, string name){		
 		_connection.Open ();
 		//retrieve from db
 		MySqlCommand command = _connection.CreateCommand();
 		command.CommandText = "SELECT * FROM `character` WHERE title='" + name + "';";
 		MySqlDataReader data = command.ExecuteReader();
 		
-		Character character = null;
+
 				//read data from dataReader and form list of Character instances
 		while (data.Read()){
-			string title = (string)data["title"];
-			string gender =(string)data["gender"];
-			Int64 id = Convert.ToInt64(data["id"]);
-			int level = Convert.ToInt32(data["level"]);
-			character = new Character(id, title, gender, level);
-			Debug.Log("Get character "+title);
+			Character.Instance.Title = (string)data["title"];
+			Character.Instance.Gender =(string)data["gender"];
+			Character.Instance.Id = Convert.ToInt64(data["id"]);
+			Character.Instance.Level = Convert.ToInt32(data["level"]);
+			 
+			Debug.Log("Get character "+Character.Instance.Title);
 		}
 		_connection.Close ();
-		return character;
 	}
 	
 	public static void InsertCharacters (MySqlConnection _connection, List<Character> characters){		
 		foreach (Character c in characters) {
 			_connection.Open ();
-			string Query = "INSERT INTO `character` values(" + c.Id + ",'" + c.Title + "','" + c.Gender + "'," + c.Level + ");";
+			string Query = "INSERT INTO character(title,gender,level,id_enterprise) values('" + c.Title + "','" + c.Gender + "'," + c.Level + ");";
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
 
@@ -42,18 +41,17 @@ public class CharacterDAO {
 			_connection.Close ();
 		}
 	}
-	public static void UpdateCharacters (MySqlConnection _connection, List<Character> characters){		
-		foreach (Character c in characters) {
+	public static void UpdateCharacter (MySqlConnection _connection){		
 			_connection.Open ();
-			string Query = "UPDATE `character` SET title='" + c.Title + "', gender='" + c.Gender + "', level=" + c.Level  + " where id=" + c.Id + ";";
+		string Query = "UPDATE `character` SET title='" + Character.Instance.Title + "', gender='" + Character.Instance.Gender 
+			+ "', level=" + Character.Instance.Level  + " where id=" + Character.Instance.Id + ";";
 
 			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  
 			command.ExecuteReader ();
-			Debug.Log ("Update character " + c.Title);
+		Debug.Log ("Update character " + Character.Instance.Title);
 			_connection.Close ();
-		}
 	}
 	
 	public static void DeleteCharacters (MySqlConnection _connection, List<Character> characters){		

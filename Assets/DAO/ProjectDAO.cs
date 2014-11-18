@@ -30,7 +30,7 @@ public class ProjectDAO {
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			
 			Project project = new Project(id, title, planned_begin_date, planned_end_date, real_begin_date, real_end_date, 
-			                              state, stated_budget, enterprise_id);
+			                              state, stated_budget, enterprise_id, false);
 			Debug.Log("Get character "+ id);
 			projects.Add(project);
 		}
@@ -59,7 +59,7 @@ public class ProjectDAO {
 			Int64 enterprise_id = Convert.ToInt64(data["enterprise_id"]);
 			
 			Project project = new Project(id,title, planned_begin_date, planned_end_date, real_begin_date, real_end_date, 
-			                              state, stated_budget, enterprise_id);
+			                              state, stated_budget, enterprise_id, false);
 			Debug.Log("Get character "+ id);
 			projects.Add(project);
 		}
@@ -70,7 +70,7 @@ public class ProjectDAO {
 	public static void InsertProjects (MySqlConnection _connection, List<Project> projects){		
 		foreach (Project project in projects) {
 			_connection.Open ();
-			string Query = "INSERT INTO `project` values(" + project.Id + ",'" + project.Title + "','" + Helper.ToMySQLDateTimeFormat(project.Planned_begin_date) + "','" + 
+			string Query = "INSERT INTO project(title,planned_begin_date,planned_end_date,real_begin_date,real_end_date,state,stated_budget,enterprise_id) values('" + project.Title + "','" + Helper.ToMySQLDateTimeFormat(project.Planned_begin_date) + "','" + 
 				Helper.ToMySQLDateTimeFormat(project.Planned_end_date) + "','" + Helper.ToMySQLDateTimeFormat(project.Real_begin_date) + "','" + Helper.ToMySQLDateTimeFormat(project.Real_end_date) + "'," + 
 					project.State + "," + project.Stated_budget + ");";
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -82,8 +82,9 @@ public class ProjectDAO {
 		}
 	}
 	
-	public static void UpdateProjects (MySqlConnection _connection, List<Project> projects){		
-		foreach (Project project in projects) {
+	public static void UpdateProjects (MySqlConnection _connection){		
+		foreach (Project project in Character.Instance.Enterprise.Projects) {
+			if(project.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `project` SET planned_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Planned_begin_date) + "', title='" + project.Title + "', planned_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Planned_end_date) + 
 				"', real_begin_date='" + Helper.ToMySQLDateTimeFormat(project.Real_begin_date) + "', real_end_date='" + Helper.ToMySQLDateTimeFormat(project.Real_end_date) + 
@@ -169,7 +170,7 @@ public class ProjectDAO {
 			project_stages[0].Testing_done = testing_hours;
 			project_stages[0].Design_done = design_hours;
 
-			Project_stageDAO.UpdateProject_stages(_connection, project_stages);
+			Project_stageDAO.UpdateProject_stages(_connection);
 
 			Debug.Log("Get character "+ conception_hours + "!!!"+ programming_hours + "!!!"+ 
 			          testing_hours + "!!!"+ design_hours + "!!!");
@@ -219,7 +220,7 @@ public class ProjectDAO {
 			employees.Add(EmployeeDAO.GetEmployeeById(connection, data.Key));
 		}
 	
-		EmployeeDAO.UpdateEmployees(connection, employees);
+		EmployeeDAO.UpdateEmployees(connection);
 
 	} 
 

@@ -27,7 +27,7 @@ public class CompanyDAO {
 			int period = Convert.ToInt32(data["period"]);
 			decimal investment = Convert.ToDecimal(data["investment"]);
 
-			Company company = new Company(id, title, share, period, investment);
+			Company company = new Company(id, title, share, period, investment, false);
 			Debug.Log("Get company "+title);
 			companies.Add(company);
 		}
@@ -49,9 +49,9 @@ public class CompanyDAO {
 			int period = Convert.ToInt32(data["period"]);
 			decimal investment = Convert.ToDecimal(data["investment"]);
 			
-			Company company = new Company(id, title, share, period, investment);
+			Company company = new Company(id, title, share, period, investment, false);
 			Debug.Log("Get company "+title);
-			c = new Company(1,title,share, period, investment);
+			c = new Company(1,title,share, period, investment, false);
 		}
 		_connection.Close ();
 		return c;
@@ -60,7 +60,7 @@ public class CompanyDAO {
 	public static void InsertCompanies (MySqlConnection _connection, List<Company> companies){		
 		foreach (Company company in companies) {
 			_connection.Open ();
-			string Query = "INSERT INTO `company` values(" + company.Id + ",'" + 
+			string Query = "INSERT INTO company(title,share,period,investment) values('" + 
 				company.Title + "'," + company.Share + "," + company.Period + "," + company.Investment + ");";
 
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -72,18 +72,24 @@ public class CompanyDAO {
 		}
 	}
 
-	public static void UpdateCompanies (MySqlConnection _connection, List<Company> companies){		
-		foreach (Company company in companies) {
-			_connection.Open ();
-			string Query = "UPDATE `company` SET title='" + company.Title + "', share=" + 
-				company.Share + ", period="  +  company.Period + ", investment=" + company.Investment + " where id=" + company.Id + ";";
+	public static void UpdateCompanies (MySqlConnection _connection){	
+		Company company;
+		foreach (Service service in Character.Instance.Enterprise.Services) 
+		{				
+			company = service.Company;
+					if (company.isNew)
+							continue;
+					_connection.Open ();
+					string Query = "UPDATE `company` SET title='" + company.Title + "', share=" + 
+							company.Share + ", period=" + company.Period + ", investment=" + company.Investment + " where id=" + company.Id + ";";
 
-			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
-			MySqlCommand command = new MySqlCommand (Query, _connection);
+					Query = Helper.ReplaceUpdateQueryVoidWithNulls (Query);
+					MySqlCommand command = new MySqlCommand (Query, _connection);
 
-			command.ExecuteReader ();
-			Debug.Log ("Update company " + company.Title);
-			_connection.Close ();
+					command.ExecuteReader ();
+					Debug.Log ("Update company " + company.Title);
+					_connection.Close ();
+
 		}
 	}
 	

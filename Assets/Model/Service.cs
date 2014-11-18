@@ -16,6 +16,7 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Service
 	{	
 		public Int64 Id { get; set; }
@@ -24,14 +25,15 @@ namespace Model
 		public int Period { get; set; }
 		public int PeriodsPaid { get; set; }
 		public decimal Effectiveness { get; set; }
+		public bool isNew { get; private set; }
 
 		public Int64 Enterprise_id { get; set; }
 		public Int64 Company_id { get; set; }
 
-		public Company Company  { get; set; }
+		public virtual Company Company { get; set; }
 
 		public Service(Int64 id, string title, decimal price, int period,int periodsPaid, 
-		               decimal effectiveness, Int64 enterprise_id, Int64 company_id)
+		               decimal effectiveness, Int64 enterprise_id, Int64 company_id, bool isNew)
 		{
 			Id = id;
 			Title = title;
@@ -40,6 +42,8 @@ namespace Model
 			PeriodsPaid = periodsPaid;
 			Enterprise_id = enterprise_id;
 			Effectiveness = effectiveness;
+			Company_id = company_id;
+			this.isNew = isNew;
 		}
 	}
 }

@@ -32,7 +32,7 @@ public class Project_stageDAO {
 			Int64 project_id = Convert.ToInt64(data["project_id"]);
 
 			Project_stage project_stage = new Project_stage(project_id, conception_hours, programming_hours, testing_hours, design_hours,
-			                                                conception_done, programming_done, testing_done, design_done);
+			                                                conception_done, programming_done, testing_done, design_done, false);
 			Debug.Log("Get asset type="+project_id);
 			project_stages.Add(project_stage);
 		}
@@ -64,7 +64,7 @@ public class Project_stageDAO {
 			Int64 project_id = Convert.ToInt64(data["project_id"]);
 			
 			project_stage = new Project_stage(project_id, conception_hours, programming_hours, testing_hours, design_hours,
-			                                                conception_done, programming_done, testing_done, design_done);
+			                                  conception_done, programming_done, testing_done, design_done, false);
 			Debug.Log("Get asset type="+project_id);
 		}
 		_connection.Close ();
@@ -96,7 +96,7 @@ public class Project_stageDAO {
 			Int64 project_id = Convert.ToInt64(data["project_id"]);
 			
 			project_stage = new Project_stage(project_id, conception_hours, programming_hours, testing_hours, design_hours,
-			                                                conception_done, programming_done, testing_done, design_done);
+			                                  conception_done, programming_done, testing_done, design_done, false);
 			Debug.Log("Get asset type="+project_id);
 		}
 		_connection.Close ();
@@ -119,8 +119,10 @@ public class Project_stageDAO {
 		}
 	}
 
-	public static void UpdateProject_stages (MySqlConnection _connection, List<Project_stage> project_stages){		
-		foreach (Project_stage project_stage in project_stages) {
+	public static void UpdateProject_stages (MySqlConnection _connection){		
+		foreach (Project project in Character.Instance.Enterprise.Projects) {
+			Project_stage project_stage = project.Project_stage;
+			if(project_stage.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `project_stage` SET conception_hours=" + project_stage.Conception_hours + ", programming_hours=" + project_stage.Programming_hours+ ", testing_hours=" + 
 				project_stage.Testing_hours+ ", design_hours=" + project_stage.Design_hours+ ", conception_done=" + project_stage.Conception_done+ ", programming_done=" + project_stage.Programming_done+ ", testing_done=" 

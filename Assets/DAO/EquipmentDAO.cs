@@ -24,7 +24,7 @@ public class EquipmentDAO {
 			Int64 id = Convert.ToInt64(data["id"]);
 			decimal price = Convert.ToDecimal(data["price"]);
 
-			Equipment equip = new Equipment(id, title, price);
+			Equipment equip = new Equipment(id, title, price, false);
 			Debug.Log("Get piece of equipment of type =" + title);
 			equipment.Add(equip);
 		}
@@ -47,7 +47,7 @@ public class EquipmentDAO {
 			Int64 title = Convert.ToInt32(data["title"]);
 			Int64 price = Convert.ToInt32(data["price"]);
 			
-			equip = new Equipment(id, title, price);
+			equip = new Equipment(id, title, price, false);
 			Debug.Log("Get character "+id);
 		}
 		_connection.Close ();
@@ -58,7 +58,7 @@ public class EquipmentDAO {
 	public static void InsertEquipment (MySqlConnection _connection, List<Equipment> equipment){		
 		foreach (Equipment equip in equipment) {
 			_connection.Open ();
-			string Query = "INSERT INTO `equipment` values(" + equip.Id + "," + equip.Title + "," + equip.Price + ");";
+			string Query = "INSERT INTO equipment(title,price) values(" + equip.Title + "," + equip.Price + ");";
 
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
@@ -70,6 +70,7 @@ public class EquipmentDAO {
 	}
 	public static void UpdateEquipment (MySqlConnection _connection, List<Equipment> equipment){		
 		foreach (Equipment equip in equipment) {
+			if(equip.isNew) continue;
 			_connection.Open ();
 			string Query = "UPDATE `equipment` SET title=" + equip.Title + ", price=" + equip.Price + " where id=" + equip.Id + ";";
 

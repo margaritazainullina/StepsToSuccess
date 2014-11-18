@@ -26,7 +26,7 @@ public class ProductDAO {
 			decimal prime_cost = Convert.ToDecimal(data["prime_cost"]);
 			Int64 project_id = Convert.ToInt64(data["project_id"]);
 
-			Product product = new Product(id, title, price, quality, prime_cost, project_id);
+			Product product = new Product(id, title, price, quality, prime_cost, project_id, false);
 			Debug.Log("Get product "+title);
 			products.Add(product);
 		}
@@ -51,7 +51,7 @@ public class ProductDAO {
 			decimal prime_cost = Convert.ToDecimal(data["prime_cost"]);
 			Int64 project_id = Convert.ToInt64(data["project_id"]);
 			
-			product = new Product(id, title, price, quality, prime_cost, project_id);
+			product = new Product(id, title, price, quality, prime_cost, project_id, false);
 			Debug.Log("Get product "+title);
 		}
 		_connection.Close ();
@@ -76,7 +76,7 @@ public class ProductDAO {
 			decimal prime_cost = Convert.ToDecimal(data["prime_cost"]);
 			Int64 project_id = Convert.ToInt64(data["project_id"]);
 			
-			Product product = new Product(id, title, price, quality, prime_cost, project_id);
+			Product product = new Product(id, title, price, quality, prime_cost, project_id, false);
 			Debug.Log("Get product "+title);
 			products.Add(product);
 		}
@@ -87,7 +87,7 @@ public class ProductDAO {
 	public static void InsertProducts (MySqlConnection _connection, List<Product> products){		
 		foreach (Product product in products) {
 			_connection.Open ();
-			string Query = "INSERT INTO `product` values(" + product.Id + ",'" + product.Title + "'," + 
+			string Query = "INSERT INTO product(title,price,quality,prime_cost,project_id) values('"  + product.Title + "'," + 
 				product.Price + "," + product.Quality + "," + product.Prime_cost + "," + product.Project_id + ");";
 
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
@@ -98,15 +98,19 @@ public class ProductDAO {
 			_connection.Close ();
 		}
 	}
-	public static void UpdateProducts (MySqlConnection _connection, List<Product> products){		
-		foreach (Product product in products) {
+	public static void UpdateProducts (MySqlConnection _connection){		
+		foreach (Project project in Character.Instance.Enterprise.Projects) 
+		{			
+			Product product = project.Product;
+			if (product.isNew)
+					continue;
 			_connection.Open ();
 			string Query = "UPDATE `product` SET title='" + product.Title + "', price=" + product.Price + 
-				", quality=" + product.Quality + ", prime_cost=" + product.Prime_cost +", project_id=" + product.Project_id + " where id=" + product.Id + ";";
+					", quality=" + product.Quality + ", prime_cost=" + product.Prime_cost + ", project_id=" + product.Project_id + " where id=" + product.Id + ";";
 
-			Query = Helper.ReplaceUpdateQueryVoidWithNulls(Query);
+			Query = Helper.ReplaceUpdateQueryVoidWithNulls (Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
- 
+
 			command.ExecuteReader ();
 			Debug.Log ("Update product " + product.Title);
 			_connection.Close ();

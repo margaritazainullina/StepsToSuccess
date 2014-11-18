@@ -12,22 +12,24 @@ using System.Collections.Generic;
 
 namespace Model
 {
+	[Serializable]
 	public class Role
 	{
 		public Int64 Id { get; set; }
 		public string Title { get; set; } //We must change it so it's not equal to the classname
 		public decimal Min_salary { get; set; }
 		public decimal Max_salary { get; set; }
+		public bool isNew { get; private set; }
 
-		public virtual ICollection<Employee> Employees {get; set;}
-		public virtual ICollection<Human_resources> Human_resources {get; set;}
+		public virtual List<Employee> Employees {get; set;}
 
-		public Role(Int64 id, string title, decimal min_salary, decimal max_salary)
+		public Role(Int64 id, string title, decimal min_salary, decimal max_salary, bool isNew)
 		{
 			Id = id;
 			Title = title;
 			Min_salary = min_salary;
 			Max_salary = max_salary;
+			this.isNew = isNew;
 		}
 	}
 }

@@ -11,22 +11,22 @@ using System;
 
 namespace Model
 {
+	[Serializable]
 	public class Competitor
 	{
 		public Int64 Id { get; set; }
 		public string Title { get; set; }
 		public double Success_rate { get; set; }
-
 		public Int64 Enterprise_id { get; set; }
+		public bool isNew { get; private set; }
 
-		public virtual Enterprise Enterprise { get; set; }
-
-		public Competitor (Int64 id, string title, double success_rate, Int64 enterprise_id)
+		public Competitor (Int64 id, string title, double success_rate, Int64 enterprise_id, bool isNew)
 		{
 			Id = id;
 			Title = title;
 			Success_rate = success_rate;
 			Enterprise_id = enterprise_id;
+			this.isNew = isNew;
 		}
 	}
 }
