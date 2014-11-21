@@ -66,8 +66,9 @@ public class Enterprise_equipmentDAO {
 		return enterprise_equipment;
 	}
 
-	public static void InsertEnterprise_equipment (MySqlConnection _connection, List<Enterprise_equipment> enterprise_equipment, Int64 enterprise_id){		
-		foreach (Enterprise_equipment enterprise_equip in enterprise_equipment) {
+	public static void InsertEnterprise_equipment (MySqlConnection _connection){		
+		foreach (Enterprise_equipment enterprise_equip in Character.Instance.Enterprise.Enterprise_equipment) {
+			if(!enterprise_equip.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO `enterprise_equipment` values(" + enterprise_equip.Enterprise_id + "," + enterprise_equip.Equipment_id + ",'" + 
 				Helper.ToMySQLDateTimeFormat(enterprise_equip.Purchase_date) + "'," + enterprise_equip.Quantity + "," + enterprise_equip.Lease_term + "," + enterprise_equip.IsRunning + ");";

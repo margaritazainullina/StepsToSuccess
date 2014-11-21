@@ -57,8 +57,12 @@ public class CompanyDAO {
 		return c;
 	}
 
-	public static void InsertCompanies (MySqlConnection _connection, List<Company> companies){		
-		foreach (Company company in companies) {
+	public static void InsertCompanies (MySqlConnection _connection){		
+		Company company;
+		foreach (Service service in Character.Instance.Enterprise.Services) 
+		{				
+			company = service.Company;
+			if(!company.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO company(title,share,period,investment) values('" + 
 				company.Title + "'," + company.Share + "," + company.Period + "," + company.Investment + ");";

@@ -151,7 +151,7 @@ public class Team_memberDAO {
 		foreach (Team_member team_member in team_members) {
 			_connection.Open();
 			
-			string Query = "INSERT INTO Team_member values(" + team_member.Employee_id + "," + team_member.Project_id + ");";
+			string Query = "INSERT INTO Team_member(employee_id,project_id) values(" + team_member.Employee_id + "," + team_member.Project_id + ");";
 			
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			

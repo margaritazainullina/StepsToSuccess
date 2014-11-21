@@ -61,8 +61,9 @@ public class EmployeeDAO {
 		return employees;
 	}
 
-	public static void InsertEmployees (MySqlConnection _connection, List<Employee> employees){		
-		foreach (Employee employee in employees) {
+	public static void InsertEmployees (MySqlConnection _connection){		
+		foreach (Employee employee in Character.Instance.Enterprise.Employees) {
+			if(!employee.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO employee(title,salary,qualification,role_id,enterprise_id) values('" + employee.Title + 
 				"'," + employee.Qualification + "," + employee.Salary + "," + employee.Role_id + 

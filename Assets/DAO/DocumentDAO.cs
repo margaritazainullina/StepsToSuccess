@@ -57,24 +57,31 @@ public class DocumentDAO {
 		return documents;
 	}
 
-	public static void InsertDocuments (MySqlConnection _connection, List<Document> documents){		
-		foreach (Document document in documents) {
-			_connection.Open ();
-			string Query = "INSERT INTO document(title,type,path) values('"  + document.Title + "','" + 
-				document.Type + "'," + document.Path + ");";
+	public static void InsertDocuments (MySqlConnection _connection){		
+		foreach (Enterprise_docs enterprise_docs in Character.Instance.Enterprise.Enterprise_docs) 
+		{
+			foreach (Document document in enterprise_docs.Documents) 
+			{
+					if (!document.isNew)
+							continue;
+					_connection.Open ();
+					string Query = "INSERT INTO document(title,type,path) values('" + document.Title + "','" + 
+							document.Type + "'," + document.Path + ");";
 
-			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
-			MySqlCommand command = new MySqlCommand (Query, _connection);
- 
-			command.ExecuteReader ();
-			Debug.Log ("Insert document " + document.Title);
-			_connection.Close ();
+					Query = Helper.ReplaceInsertQueryVoidWithNulls (Query);
+					MySqlCommand command = new MySqlCommand (Query, _connection);
+
+					command.ExecuteReader ();
+					Debug.Log ("Insert document " + document.Title);
+					_connection.Close ();
+			}
 		}
 	}
 	public static void UpdateDocuments (MySqlConnection _connection){	
 		foreach (Enterprise_docs enterprise_docs in Character.Instance.Enterprise.Enterprise_docs) 
 		{
-			foreach (Document document in enterprise_docs.Documents) {
+			foreach (Document document in enterprise_docs.Documents) 
+			{
 					if (document.isNew)
 							continue;
 					_connection.Open ();

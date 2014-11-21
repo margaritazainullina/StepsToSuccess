@@ -84,8 +84,11 @@ public class ProductDAO {
 		return products;
 	}
 
-	public static void InsertProducts (MySqlConnection _connection, List<Product> products){		
-		foreach (Product product in products) {
+	public static void InsertProducts (MySqlConnection _connection){		
+		foreach (Project project in Character.Instance.Enterprise.Projects) 
+		{			
+			Product product = project.Product;
+			if(!product.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO product(title,price,quality,prime_cost,project_id) values('"  + product.Title + "'," + 
 				product.Price + "," + product.Quality + "," + product.Prime_cost + "," + product.Project_id + ");";

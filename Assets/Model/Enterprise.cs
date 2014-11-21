@@ -37,6 +37,7 @@ namespace Model
 		public double Stationary { get; set; }
 		public Int16? Type { get; set; }
 		public Int64 Taxation_id { get; set; }
+		public bool isNew { get; private set; }
 
 		public virtual Taxation Taxation { get; set; }
 		public virtual List<Asset> Assets {get; set;}
@@ -50,7 +51,7 @@ namespace Model
 		public virtual List<Salary_payment> Salary_payments{get; set;}
 
 		public Enterprise (Int64 id, string title, decimal balance, double stationary,
-		                   Int16? type, Int64 taxation_id)
+		                   Int16? type, Int64 taxation_id, bool isNew)
 		{
 			Id = id;
 			Title = title;
@@ -58,6 +59,7 @@ namespace Model
 			Stationary = stationary;
 			Type = type;
 			Taxation_id = taxation_id;
+			this.isNew = isNew;
 		}
 
 		//5 types of enterprise creation - 

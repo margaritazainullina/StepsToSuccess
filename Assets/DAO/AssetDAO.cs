@@ -81,8 +81,9 @@ public class AssetDAO {
 	}
 
 	//What if there's no element for id
-	public static void InsertAssets (MySqlConnection _connection, List<Asset> assets){		//12 ()
-		foreach (Asset asset in assets) {
+	public static void InsertAssets (MySqlConnection _connection){		//12 ()
+		foreach (Asset asset in Character.Instance.Enterprise.Assets) {
+			if(!asset.isNew) continue;
 			_connection.Open();
 
 			string Query = "INSERT INTO asset(value,asset_date,enterprise_id) values(" + asset.Value + ",'" + Helper.ToMySQLDateTimeFormat(asset.Asset_date) 

@@ -66,8 +66,9 @@ public class ServiceDAO {
 		return services;
 	}
 
-	public static void InsertServices (MySqlConnection _connection, List<Service> services){		
-		foreach (Service service in services) {
+	public static void InsertServices (MySqlConnection _connection){		
+		foreach (Service service in Character.Instance.Enterprise.Services) {
+			if(!service.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO service(title,price,period,effectiveness,periods_paid,enterprise_id,company_id) values('" + service.Title + "'," + 
 				service.Price + "," + service.Period+ "," + service.PeriodsPaid + "," + service.Effectiveness + "," + service.Enterprise_id + "," + service.Company_id + ");";

@@ -37,8 +37,9 @@ public class TaxationDAO {
 		return taxations;
 	}
 	
-	public static void InsertTaxations (MySqlConnection _connection, List<Taxation> taxations){		
-		foreach (Taxation taxation in taxations) {
+	public static void InsertTaxations (MySqlConnection _connection){		
+		Taxation taxation = Character.Instance.Enterprise.Taxation;
+			if(!taxation.isNew) return;
 			_connection.Open ();
 			string Query = "INSERT INTO taxation(taxation_group,max_revenue,max_employee,VAT,income_duty,type) values(" + taxation.Taxation_group + "," + 
 				taxation.Max_revenue + "," + taxation.Max_employee + "," + taxation.VAT + "," + taxation.Income_duty + ");";
@@ -50,7 +51,7 @@ public class TaxationDAO {
 			command.ExecuteReader ();
 			Debug.Log ("Insert role " + taxation.Id);
 			_connection.Close ();
-		}
+
 	}
 	public static void UpdateTaxation (MySqlConnection _connection){		
 		Taxation taxation = Character.Instance.Enterprise.Taxation;

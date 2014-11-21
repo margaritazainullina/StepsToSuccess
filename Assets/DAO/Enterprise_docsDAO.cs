@@ -61,8 +61,9 @@ public class Enterprise_docsDAO {
 		return enterprise_docs;
 	}
 
-	public static void InsertEnterprise_docs (MySqlConnection _connection, List<Enterprise_docs> enterprise_docs){		
-		foreach (Enterprise_docs enterprise_doc in enterprise_docs) {
+	public static void InsertEnterprise_docs (MySqlConnection _connection){		
+		foreach (Enterprise_docs enterprise_doc in Character.Instance.Enterprise.Enterprise_docs) {
+			if(!enterprise_doc.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO enterprise_docs(document_id,availability,is_active,expiration_date,enterprise_id) values(" + enterprise_doc.Document_id + "," + enterprise_doc.Availability + 
 				"," + enterprise_doc.Is_active + ",'" + Helper.ToMySQLDateTimeFormat(enterprise_doc.Expiration_date) + "'," + enterprise_doc.Enterprise_id + ");";

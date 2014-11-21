@@ -67,8 +67,9 @@ public class ProjectDAO {
 		return projects;
 	}
 	
-	public static void InsertProjects (MySqlConnection _connection, List<Project> projects){		
-		foreach (Project project in projects) {
+	public static void InsertProjects (MySqlConnection _connection){		
+		foreach (Project project in Character.Instance.Enterprise.Projects) {
+			if(!project.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO project(title,planned_begin_date,planned_end_date,real_begin_date,real_end_date,state,stated_budget,enterprise_id) values('" + project.Title + "','" + Helper.ToMySQLDateTimeFormat(project.Planned_begin_date) + "','" + 
 				Helper.ToMySQLDateTimeFormat(project.Planned_end_date) + "','" + Helper.ToMySQLDateTimeFormat(project.Real_begin_date) + "','" + Helper.ToMySQLDateTimeFormat(project.Real_end_date) + "'," + 

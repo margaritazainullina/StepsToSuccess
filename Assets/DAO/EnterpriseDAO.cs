@@ -28,7 +28,7 @@ public class EnterpriseDAO { //SINGLETONE
 			Int16? type = Helper.GetValueOrNull<Int16>(Convert.ToString(data["type"]));
 			Int64 taxation_id = Convert.ToInt64(data["taxation_id"]);
 
-			enterprise = new Enterprise(id, title, balance, stationary, type, taxation_id);
+			enterprise = new Enterprise(id, title, balance, stationary, type, taxation_id, false);
 			Debug.Log("Get enterprise "+title);
 			enterprises.Add(enterprise);
 		}
@@ -37,17 +37,17 @@ public class EnterpriseDAO { //SINGLETONE
 		return enterprise;
 	}
 
-	public static void InsertEnterprises (MySqlConnection _connection, List<Enterprise> enterprises){		
-		foreach (Enterprise enterprise in enterprises) {
+	public static void InsertEnterprise (MySqlConnection _connection){		
+		if (Character.Instance.Enterprise.isNew) {
 			_connection.Open ();
-			string Query = "INSERT INTO enterprise(title,balance,stationary,type,taxation_id) values('" + enterprise.Title + "'," + enterprise.Balance + "," + 
-				enterprise.Stationary + "," + enterprise.Type + "," + enterprise.Taxation_id + ");";
+			string Query = "INSERT INTO enterprise(title,balance,stationary,type,taxation_id) values('" + Character.Instance.Enterprise.Title + "'," + Character.Instance.Enterprise.Balance + "," + 
+				Character.Instance.Enterprise.Stationary + "," + Character.Instance.Enterprise.Type + "," + Character.Instance.Enterprise.Taxation_id + ");";
 
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
  
 			command.ExecuteReader ();
-			Debug.Log ("Insert enterprise " + enterprise.Title);
+			Debug.Log ("Insert enterprise " + Character.Instance.Enterprise.Title);
 			_connection.Close ();
 		}
 	}
@@ -100,7 +100,7 @@ public class EnterpriseDAO { //SINGLETONE
 				Int16? type = Helper.GetValueOrNull<Int16>(Convert.ToString(data["type"]));
 				Int64 taxation_id = Convert.ToInt64(data["taxation_id"]);
 
-				enterprise = new Enterprise(id,title,balance,stationary,type,taxation_id);
+				enterprise = new Enterprise(id,title,balance,stationary,type,taxation_id,false);
 			}
 			//MB create objects of employee to use update employeedao and set there qualification
 			

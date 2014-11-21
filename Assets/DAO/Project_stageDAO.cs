@@ -103,8 +103,11 @@ public class Project_stageDAO {
 		return project_stage;
 	}
 
-	public static void InsertProject_stages (MySqlConnection _connection, List<Project_stage> project_stages, Int64 enterprise_id){		
-		foreach (Project_stage project_stage in project_stages) {
+	public static void InsertProject_stages (MySqlConnection _connection){		
+		foreach (Project project in Character.Instance.Enterprise.Projects) 
+		{
+			Project_stage project_stage = project.Project_stage;
+			if(!project_stage.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO `project_stage` values(" + project_stage.Project_id + "," + project_stage.Conception_hours + "," + project_stage.Programming_hours+ "," + 
 				project_stage.Testing_hours+ "," + project_stage.Design_hours+ "," + project_stage.Conception_done+ "," + project_stage.Programming_done+ "," 

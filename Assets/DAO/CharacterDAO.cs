@@ -29,18 +29,20 @@ public class CharacterDAO {
 		_connection.Close ();
 	}
 	
-	public static void InsertCharacters (MySqlConnection _connection, List<Character> characters){		
-		foreach (Character c in characters) {
+	public static void InsertCharacter (MySqlConnection _connection){		
+
 			_connection.Open ();
-			string Query = "INSERT INTO character(title,gender,level,id_enterprise) values('" + c.Title + "','" + c.Gender + "'," + c.Level + ");";
+			string Query = "INSERT INTO character(title,gender,level,id_enterprise) values('" + Character.Instance.Title 
+			+ "','" + Character.Instance.Gender + "'," + Character.Instance.Level + ");";
 			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
 			MySqlCommand command = new MySqlCommand (Query, _connection);
-
+			
 			command.ExecuteReader ();
-			Debug.Log ("Insert character " + c.Title);
+			Debug.Log ("Insert character " + Character.Instance.Title);
 			_connection.Close ();
-		}
+
 	}
+
 	public static void UpdateCharacter (MySqlConnection _connection){		
 			_connection.Open ();
 		string Query = "UPDATE `character` SET title='" + Character.Instance.Title + "', gender='" + Character.Instance.Gender 

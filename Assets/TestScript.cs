@@ -100,20 +100,7 @@ public class TestScript : MonoBehaviour {
 
 		Character.Instance.Enterprise = enterprise;
 
-		//enterprise.Employees[0].Role;
-
-		/*****************LOADING THE GAME***********************/
-
-		//FileStream fs = new FileStream ("stssavegame", FileMode.Open);
-		//character = null;
-		//character = LoadDataFromFile (fs);
-		//Debug.Log ("!" + character.Title + "ent " + character.Enterprise.Title + " employee " + character.Enterprise.Employees [0].Title);
-
-		/*****************SAVING THE GAME************************/
-		//FileStream fs = new FileStream ("stssavegame", FileMode.Create);
-
-		//SaveDataToFile(character, fs);
-
+		/****************SAVING - UPDATE DATA*****************************/
 		CharacterDAO.UpdateCharacter (connection);
 		EnterpriseDAO.UpdateEnterprise(connection);
 
@@ -129,8 +116,39 @@ public class TestScript : MonoBehaviour {
 		/*EquipmentDAO.UpdateEquipment (connection, character.Enterprise.Employees);*/
 		DocumentDAO.UpdateDocuments (connection);
 		CompanyDAO.UpdateCompanies (connection);
-		Salary_paymentDAO.UpdateAssets (connection);
+		Salary_paymentDAO.UpdateSalary_payments (connection);
 		ProductDAO.UpdateProducts (connection);
 		Project_stageDAO.UpdateProject_stages (connection);
+
+		/****************SAVING - INSERTING DATA*****************************/
+
+		EnterpriseDAO.InsertEnterprise(connection);
+		
+		EmployeeDAO.InsertEmployees (connection);
+		CompetitorDAO.InsertCompetitors (connection);
+		Enterprise_docsDAO.InsertEnterprise_docs (connection);
+		AssetDAO.InsertAssets (connection);
+		Enterprise_equipmentDAO.InsertEnterprise_equipment (connection);
+		ProjectDAO.InsertProjects (connection);
+		ServiceDAO.InsertServices (connection);
+		TaxationDAO.InsertTaxations (connection);
+		//RoleDAO.UpdateRoles (connection, character.Enterprise.Employees.); won't change 
+		/*EquipmentDAO.UpdateEquipment (connection, character.Enterprise.Employees);*/
+		DocumentDAO.InsertDocuments (connection);
+		CompanyDAO.InsertCompanies (connection);
+		Salary_paymentDAO.InsertSalary_payments (connection);
+		ProductDAO.InsertProducts (connection);
+		Project_stageDAO.InsertProject_stages (connection);
+		//create creating new game not only load
 	}
+
+	public void StartNewGame(string characterName, string characterGender, int level, MySqlConnection connection)
+	{
+		Character.Instance.Title = characterName;
+		Character.Instance.Gender = characterGender;
+		Character.Instance.Level = level;
+
+		CharacterDAO.InsertCharacter (connection);
+	}
+
 }

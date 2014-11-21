@@ -59,23 +59,31 @@ public class Salary_paymentDAO {
 		return salary_payments;
 	}
 
-	public static void InsertSalary_payments (MySqlConnection _connection, List<Salary_payment> salary_payments){		
-		foreach (Salary_payment salary_payment in salary_payments) {
-			_connection.Open ();
-			string Query = "INSERT INTO salary_payment(`date`,hours_worked, salary,employee_id) values('" + Helper.ToMySQLDateTimeFormat(salary_payment.Date) + "'," + salary_payment.Hours_worked + "," + 
-				salary_payment.Salary + "," + salary_payment.Employee_id + ");";
-			
-			
-			Query = Helper.ReplaceInsertQueryVoidWithNulls(Query);
-			
-			MySqlCommand command = new MySqlCommand (Query, _connection);
+	public static void InsertSalary_payments (MySqlConnection _connection){		
+		foreach (Employee employee in Character.Instance.Enterprise.Employees) 
+		{
+			if (employee.Salary_payments == null)
+					continue;
+			foreach (Salary_payment salary_payment in employee.Salary_payments) 
+			{
+					if (!salary_payment.isNew)
+							continue;
+					_connection.Open ();
+					string Query = "INSERT INTO salary_payment(`date`,hours_worked, salary,employee_id) values('" + Helper.ToMySQLDateTimeFormat (salary_payment.Date) + "'," + salary_payment.Hours_worked + "," + 
+							salary_payment.Salary + "," + salary_payment.Employee_id + ");";
 
-			command.ExecuteReader ();
-			Debug.Log ("Insert salary_payment id="+salary_payment.Id);
-			_connection.Close ();
+
+					Query = Helper.ReplaceInsertQueryVoidWithNulls (Query);
+
+					MySqlCommand command = new MySqlCommand (Query, _connection);
+
+					command.ExecuteReader ();
+					Debug.Log ("Insert salary_payment id=" + salary_payment.Id);
+					_connection.Close ();
+			}
 		}
 	}
-	public static void UpdateAssets (MySqlConnection _connection){		
+	public static void UpdateSalary_payments (MySqlConnection _connection){		
 		foreach (Employee employee in Character.Instance.Enterprise.Employees) 
 		{
 			if(employee.Salary_payments == null) continue;
@@ -98,7 +106,7 @@ public class Salary_paymentDAO {
 		}
 	}
 	
-	public static void DeleteAssets (MySqlConnection _connection, List<Salary_payment> salary_payments){		
+	public static void DeleteSalary_payments (MySqlConnection _connection, List<Salary_payment> salary_payments){		
 		foreach (Salary_payment salary_payment in salary_payments) {
 			_connection.Open ();
 			string Query = "DELETE FROM `salary_payment` WHERE id="+salary_payment.Id+ ";";

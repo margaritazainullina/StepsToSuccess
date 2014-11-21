@@ -57,8 +57,9 @@ public class CompetitorDAO {
 		return compatitors;
 	}
 
-	public static void InsertCompetitors (MySqlConnection _connection, List<Competitor> compatitors){		
-		foreach (Competitor compatitor in compatitors) {
+	public static void InsertCompetitors (MySqlConnection _connection){		
+		foreach (Competitor compatitor in Character.Instance.Enterprise.Competitors) {
+			if(!compatitor.isNew) continue;
 			_connection.Open ();
 			string Query = "INSERT INTO competitor(title,success_rate,enterprise_id) values('" + compatitor.Title + "'," + 
 				compatitor.Success_rate + "," + compatitor.Enterprise_id + ");";
